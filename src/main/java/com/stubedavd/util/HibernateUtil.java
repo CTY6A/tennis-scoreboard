@@ -1,5 +1,7 @@
 package com.stubedavd.util;
 
+import com.stubedavd.model.entity.Match;
+import com.stubedavd.model.entity.Player;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import com.stubedavd.exception.InfrastructureException;
@@ -19,8 +21,11 @@ public final class HibernateUtil {
         }
 
         try {
+
             sessionFactory = new Configuration()
-                    .addPackage("com.stubedavd.model.entity")
+                    .configure()
+                    .addAnnotatedClass(Player.class)
+                    .addAnnotatedClass(Match.class)
                     .buildSessionFactory();
         } catch (Exception e) {
             throw new InfrastructureException("Could not initialize Hibernate SessionFactory");
