@@ -1,6 +1,6 @@
 package com.stubedavd.controller;
 
-import com.stubedavd.model.entity.Match;
+import com.stubedavd.model.Match;
 import com.stubedavd.util.HibernateUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

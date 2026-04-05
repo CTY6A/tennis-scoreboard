@@ -1,7 +1,5 @@
 package com.stubedavd.dto;
 
-import com.stubedavd.model.entity.Player;
-
 import java.util.UUID;
 
-public record MatchDto(UUID uuid, Player player1, Player player2, MatchScoreDto matchScoreDto) {}
+public record MatchDto(UUID uuid, PlayerDto playerDto1, PlayerDto playerDto2, MatchScoreDto matchScoreDto) {}
