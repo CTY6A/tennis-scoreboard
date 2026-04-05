@@ -9,6 +9,7 @@ import java.io.IOException;
 
 public abstract class BaseServlet extends HttpServlet {
 
+    //TODO: delete this
     protected void sendJson(HttpServletResponse response, int status, Object object) throws IOException {
 
         response.setContentType("application/json; charset=UTF-8");
