@@ -1,4 +1,4 @@
-package com.stubedavd.controller;
+package com.stubedavd.servlet;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

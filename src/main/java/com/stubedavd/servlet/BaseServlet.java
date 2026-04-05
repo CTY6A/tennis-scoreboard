@@ -1,4 +1,4 @@
-package com.stubedavd.controller;
+package com.stubedavd.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
