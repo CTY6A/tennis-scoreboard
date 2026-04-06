@@ -1,4 +1,4 @@
-package com.stubedavd.model;
+package com.stubedavd.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
