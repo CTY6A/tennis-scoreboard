@@ -1,7 +1,6 @@
 package com.stubedavd.model;
 
 import com.stubedavd.dto.PlayerDto;
-import com.stubedavd.dto.response.PlayerResponseDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,9 +17,12 @@ public class MatchScoreModel {
     private PlayerDto playerDto2;
     private PlayerDto winner;
 
-    private Map<PlayerDto, Integer> score;
-    private Map<PlayerDto, Integer> game;
-    private Map<PlayerDto, Integer> set;
+    private Map<PlayerDto, Integer> points;
+    private Map<PlayerDto, Integer> games;
+    private Map<PlayerDto, Integer> sets;
+
+    private Boolean tieBreak;
+    private Boolean matchFinished;
 
     public MatchScoreModel(PlayerDto playerDto1, PlayerDto playerDto2) {
 
@@ -28,19 +30,22 @@ public class MatchScoreModel {
         this.playerDto2 = playerDto2;
         this.winner = null;
 
-        this.score = new HashMap<>() {{
+        this.points = new HashMap<>() {{
             put(playerDto1, 0);
             put(playerDto2, 0);
         }};
 
-        this.game = new HashMap<>() {{
+        this.games = new HashMap<>() {{
             put(playerDto1, 0);
             put(playerDto2, 0);
         }};
 
-        this.set = new HashMap<>() {{
+        this.sets = new HashMap<>() {{
             put(playerDto1, 0);
             put(playerDto2, 0);
         }};
+
+        this.tieBreak = false;
+        this.matchFinished = false;
     }
 }

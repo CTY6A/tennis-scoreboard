@@ -1,10 +1,11 @@
 package com.stubedavd.service;
 
 import com.stubedavd.dto.PlayerDto;
+import com.stubedavd.model.MatchScoreModel;
 
 public interface MatchScoreCalculationService {
 
-    void pointWon(PlayerDto playerDto);
+    void pointWon(MatchScoreModel matchScoreModel, PlayerDto playerDto);
 
-    boolean isMatchFinished();
+    Boolean isMatchFinished(MatchScoreModel matchScoreModel);
 }
