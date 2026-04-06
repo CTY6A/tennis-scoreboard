@@ -1,4 +1,4 @@
-package com.stubedavd.service;
+package com.stubedavd.service.impl;
 
 import com.stubedavd.dto.MatchDto;
 import com.stubedavd.dto.PlayerDto;
@@ -10,6 +10,7 @@ import com.stubedavd.model.MatchScoreModel;
 import com.stubedavd.dto.request.MatchRequestDto;
 import com.stubedavd.exception.NotFoundException;
 import com.stubedavd.mapper.MatchMapper;
+import com.stubedavd.service.OngoingMatchService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,36 +18,22 @@ import java.util.UUID;
 
 public class OngoingMatchServiceImpl implements OngoingMatchService {
 
-    private static OngoingMatchServiceImpl instance;
-
     private final Map<UUID, MatchResponseDto> ongoingMatches;
     private final MatchMapper matchMapper;
     private final MatchScoreMapper matchScoreMapper;
     private final PlayerMapper playerMapper;
 
-    private OngoingMatchServiceImpl(MatchMapper matchMapper, MatchScoreMapper matchScoreMapper, PlayerMapper playerMapper) {
+    public OngoingMatchServiceImpl(
+            MatchMapper matchMapper,
+            MatchScoreMapper matchScoreMapper,
+            PlayerMapper playerMapper
+    ) {
 
-        this.ongoingMatches = new HashMap<>();
         this.matchMapper = matchMapper;
         this.matchScoreMapper = matchScoreMapper;
         this.playerMapper = playerMapper;
-    }
 
-    public static synchronized void init(MatchMapper matchMapper, MatchScoreMapper matchScoreMapper, PlayerMapper playerMapper) {
-
-        if (instance == null) {
-
-            instance = new OngoingMatchServiceImpl(matchMapper, matchScoreMapper, playerMapper);
-        }
-    }
-
-    public static synchronized OngoingMatchServiceImpl getInstance() {
-
-        if (instance == null) {
-            throw new IllegalStateException("OngoingMatchServiceImpl has not been initialized");
-        }
-
-        return instance;
+        this.ongoingMatches = new HashMap<>();
     }
 
     @Override
