@@ -1,16 +1,14 @@
 package com.stubedavd.util;
 
-import com.stubedavd.dto.MatchDto;
-import com.stubedavd.dto.PlayerDto;
 import com.stubedavd.dto.response.MatchResponseDto;
 import com.stubedavd.dto.request.MatchRequestDto;
 import com.stubedavd.dto.request.PlayerRequestDto;
 import com.stubedavd.mapper.MatchMapper;
 import com.stubedavd.mapper.MatchScoreMapper;
 import com.stubedavd.mapper.PlayerMapper;
-import com.stubedavd.model.MatchScoreModel;
 import com.stubedavd.service.OngoingMatchServiceImpl;
 
+//TODO: delete this class
 public class Main {
 
     public static void main(String[] args) {
