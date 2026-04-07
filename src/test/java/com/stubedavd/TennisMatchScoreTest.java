@@ -140,4 +140,31 @@ public class TennisMatchScoreTest {
 
         Assertions.assertEquals(1, matchScoreModel.getSets().get(playerDto1));
     }
+
+    @Test
+    void testPointWon40_40() {
+
+        matchScoreCalculationService.pointWon(matchScoreModel, playerDto1);
+        matchScoreCalculationService.pointWon(matchScoreModel, playerDto1);
+        matchScoreCalculationService.pointWon(matchScoreModel, playerDto1);
+
+        matchScoreCalculationService.pointWon(matchScoreModel, playerDto2);
+        matchScoreCalculationService.pointWon(matchScoreModel, playerDto2);
+        matchScoreCalculationService.pointWon(matchScoreModel, playerDto2);
+
+        matchScoreCalculationService.pointWon(matchScoreModel, playerDto1);
+
+        Assertions.assertEquals(0, matchScoreModel.getGames().get(playerDto1));
+    }
+
+    @Test
+    void testPointWon40_0() {
+
+        matchScoreCalculationService.pointWon(matchScoreModel, playerDto1);
+        matchScoreCalculationService.pointWon(matchScoreModel, playerDto1);
+        matchScoreCalculationService.pointWon(matchScoreModel, playerDto1);
+        matchScoreCalculationService.pointWon(matchScoreModel, playerDto1);
+
+        Assertions.assertEquals(1, matchScoreModel.getGames().get(playerDto1));
+    }
 }
