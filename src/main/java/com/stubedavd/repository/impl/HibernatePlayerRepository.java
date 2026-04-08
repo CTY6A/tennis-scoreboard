@@ -1,19 +1,21 @@
-package com.stubedavd.repository;
+package com.stubedavd.repository.impl;
 
 import com.stubedavd.entity.Player;
+import com.stubedavd.exception.AlreadyExistException;
+import com.stubedavd.repository.PlayerRepository;
 import com.stubedavd.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.hibernate.exception.ConstraintViolationException;
 
 import java.util.List;
 import java.util.Optional;
 
-public class PlayerRepositoryImpl implements PlayerRepository {
+public class HibernatePlayerRepository implements PlayerRepository {
 
     SessionFactory sessionFactory;
 
-    public PlayerRepositoryImpl() {
+    public HibernatePlayerRepository() {
 
         sessionFactory = HibernateUtil.getSessionFactory();
     }
@@ -28,6 +30,9 @@ public class PlayerRepositoryImpl implements PlayerRepository {
             session.beginTransaction().commit();
 
             return player;
+        } catch (ConstraintViolationException e) {
+
+            throw new AlreadyExistException("Player already exists");
         }
     }
 

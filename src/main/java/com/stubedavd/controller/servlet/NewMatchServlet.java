@@ -1,7 +1,10 @@
 package com.stubedavd.controller.servlet;
 
+import com.stubedavd.dto.request.PlayerRequestDto;
 import com.stubedavd.exception.NotFoundException;
 import com.stubedavd.listener.ContextListener;
+import com.stubedavd.mapper.PlayerMapper;
+import com.stubedavd.service.NewMatchService;
 import com.stubedavd.service.OngoingMatchService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -10,24 +13,36 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @WebServlet("/new-match")
 public class NewMatchServlet extends BaseServlet {
 
     public static final String JSP = "/WEB-INF/jsp/new-match.jsp";
 
-    private OngoingMatchService ongoingMatchService;
+    private NewMatchService newMatchService;
+
+    private PlayerMapper playerMapper;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
 
         super.init(config);
 
-        ongoingMatchService =
-                (OngoingMatchService) config.getServletContext().getAttribute(ContextListener.ONGOING_MATCH_SERVICE);
+        newMatchService =
+                (NewMatchService) config.getServletContext().getAttribute(ContextListener.NEW_MATCH_SERVICE);
 
-        if (ongoingMatchService == null) {
-            throw new NotFoundException("Ongoing match service not found");
+        if (newMatchService == null) {
+
+            throw new NotFoundException("New match service not found");
+        }
+
+        playerMapper =
+                (PlayerMapper) config.getServletContext().getAttribute(ContextListener.PLAYER_MAPPER);
+
+        if (playerMapper == null) {
+
+            throw new NotFoundException("Player mapper not found");
         }
     }
 
@@ -39,10 +54,19 @@ public class NewMatchServlet extends BaseServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
 
-        super.doPost(request, response);
+        String player1Name = request.getParameter("player1");
+        String player2Name = request.getParameter("player2");
 
-        
+        PlayerRequestDto player1 = playerMapper.toPlayerRequestDto(player1Name);
+        PlayerRequestDto player2 = playerMapper.toPlayerRequestDto(player2Name);
+
+        UUID matchId = newMatchService.newMatch(player1, player2);
+
+        System.out.println("New match id: " + matchId);
+
+        response.sendRedirect(request.getContextPath() + "/match-score?id=" + matchId);
     }
 }

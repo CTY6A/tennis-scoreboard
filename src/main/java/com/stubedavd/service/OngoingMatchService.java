@@ -1,11 +1,13 @@
 package com.stubedavd.service;
 
-import com.stubedavd.dto.response.MatchResponseDto;
-import com.stubedavd.dto.request.MatchRequestDto;
+import com.stubedavd.dto.OngoingMatchDto;
+import com.stubedavd.entity.Player;
 
 import java.util.UUID;
 
-public interface OngoingMatchService extends CrudService<MatchRequestDto, MatchResponseDto> {
+public interface OngoingMatchService extends CrudService {
 
-    MatchResponseDto get(UUID uuid);
+    UUID save(Player player1, Player player2);
+
+    OngoingMatchDto get(UUID uuid);
 }

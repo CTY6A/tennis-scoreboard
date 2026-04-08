@@ -1,6 +1,6 @@
 package com.stubedavd.service.impl;
 
-import com.stubedavd.dto.PlayerDto;
+import com.stubedavd.entity.Player;
 import com.stubedavd.exception.BusinessException;
 import com.stubedavd.model.MatchScoreModel;
 import com.stubedavd.service.MatchScoreCalculationService;
@@ -20,7 +20,7 @@ public class MatchScoreCalculationServiceImpl implements MatchScoreCalculationSe
     }
 
     @Override
-    public void pointWon(MatchScoreModel matchScoreModel, PlayerDto playerDto) {
+    public void pointWon(MatchScoreModel matchScoreModel, Player player) {
 
         if (isMatchFinished(matchScoreModel)) {
 
@@ -29,56 +29,56 @@ public class MatchScoreCalculationServiceImpl implements MatchScoreCalculationSe
 
         if (isTieBreak(matchScoreModel)) {
 
-            tieBreakProcessing(matchScoreModel, playerDto);
+            tieBreakProcessing(matchScoreModel, player);
         } else {
 
-            addScore(matchScoreModel.getPoints(), playerDto);
+            addScore(matchScoreModel.getPoints(), player);
 
-            if (isGameWon(matchScoreModel, playerDto)) {
+            if (isGameWon(matchScoreModel, player)) {
 
-                gameWonProcessing(matchScoreModel, playerDto);
+                gameWonProcessing(matchScoreModel, player);
             }
         }
     }
 
-    private void gameWonProcessing(MatchScoreModel matchScoreModel, PlayerDto playerDto) {
+    private void gameWonProcessing(MatchScoreModel matchScoreModel, Player player) {
 
         resetScore(matchScoreModel.getPoints());
 
-        addScore(matchScoreModel.getGames(), playerDto);
+        addScore(matchScoreModel.getGames(), player);
 
-        if (isSetWon(matchScoreModel, playerDto)) {
+        if (isSetWon(matchScoreModel, player)) {
 
-            setWonProcessing(matchScoreModel, playerDto);
+            setWonProcessing(matchScoreModel, player);
         } else if (checkTieBreak(matchScoreModel)) {
 
             matchScoreModel.setTieBreak(true);
         }
     }
 
-    private void setWonProcessing(MatchScoreModel matchScoreModel, PlayerDto playerDto) {
+    private void setWonProcessing(MatchScoreModel matchScoreModel, Player player) {
 
         resetScore(matchScoreModel.getGames());
 
-        addScore(matchScoreModel.getSets(), playerDto);
+        addScore(matchScoreModel.getSets(), player);
 
-        if (isMatchWon(matchScoreModel, playerDto)) {
+        if (isMatchWon(matchScoreModel, player)) {
 
             matchScoreModel.setMatchFinished(true);
-            matchScoreModel.setWinner(playerDto);
+            matchScoreModel.setWinner(player);
         }
     }
 
-    private void tieBreakProcessing(MatchScoreModel matchScoreModel, PlayerDto playerDto) {
+    private void tieBreakProcessing(MatchScoreModel matchScoreModel, Player player) {
 
-        addScore(matchScoreModel.getPoints(), playerDto);
+        addScore(matchScoreModel.getPoints(), player);
 
-        if (isTieBreakWon(matchScoreModel, playerDto)) {
+        if (isTieBreakWon(matchScoreModel, player)) {
 
             resetScore(matchScoreModel.getPoints());
             matchScoreModel.setTieBreak(false);
 
-            setWonProcessing(matchScoreModel, playerDto);
+            setWonProcessing(matchScoreModel, player);
         }
     }
 
@@ -86,48 +86,48 @@ public class MatchScoreCalculationServiceImpl implements MatchScoreCalculationSe
         return matchScoreModel.getTieBreak();
     }
 
-    private Boolean isGameWon(MatchScoreModel matchScoreModel, PlayerDto playerDto) {
+    private Boolean isGameWon(MatchScoreModel matchScoreModel, Player player) {
 
         return isPlayerWonThisPart(
                 matchScoreModel.getPoints(),
-                playerDto,
+                player,
                 GAME_ADVANTAGE_LIMIT
         );
     }
 
-    private Boolean isSetWon(MatchScoreModel matchScoreModel, PlayerDto playerDto) {
+    private Boolean isSetWon(MatchScoreModel matchScoreModel, Player player) {
 
         return isPlayerWonThisPart(
                 matchScoreModel.getGames(),
-                playerDto,
+                player,
                 SET_ADVANTAGE_LIMIT
         );
     }
 
-    private Boolean isMatchWon(MatchScoreModel matchScoreModel, PlayerDto playerDto) {
+    private Boolean isMatchWon(MatchScoreModel matchScoreModel, Player player) {
 
-        return matchScoreModel.getSets().get(playerDto) == 2;
+        return matchScoreModel.getSets().get(player) == 2;
     }
 
-    private Boolean isTieBreakWon(MatchScoreModel matchScoreModel, PlayerDto playerDto) {
+    private Boolean isTieBreakWon(MatchScoreModel matchScoreModel, Player player) {
 
         return isPlayerWonThisPart(
                 matchScoreModel.getPoints(),
-                playerDto,
+                player,
                 TIE_BREAK_ADVANTAGE_LIMIT
         );
     }
 
     private Boolean isPlayerWonThisPart(
-            Map<PlayerDto, Integer> calculationSubject,
-            PlayerDto playerDto,
+            Map<Player, Integer> calculationSubject,
+            Player playerDto,
             Integer advantageLimit
     ) {
 
         Integer winnerCounter = 0;
         Integer loserCounter = 0;
 
-        for(Map.Entry<PlayerDto, Integer> entry : calculationSubject.entrySet()) {
+        for(Map.Entry<Player, Integer> entry : calculationSubject.entrySet()) {
 
             if (playerDto.equals(entry.getKey())) {
                 winnerCounter = entry.getValue();
@@ -141,7 +141,7 @@ public class MatchScoreCalculationServiceImpl implements MatchScoreCalculationSe
 
     private Boolean checkTieBreak(MatchScoreModel matchScoreModel) {
 
-        for (Map.Entry<PlayerDto, Integer> entry : matchScoreModel.getGames().entrySet()) {
+        for (Map.Entry<Player, Integer> entry : matchScoreModel.getGames().entrySet()) {
 
             if (entry.getValue() != SET_ADVANTAGE_LIMIT) {
                 return false;
@@ -151,12 +151,12 @@ public class MatchScoreCalculationServiceImpl implements MatchScoreCalculationSe
         return true;
     }
 
-    private void addScore(Map<PlayerDto, Integer> score, PlayerDto playerDto) {
+    private void addScore(Map<Player, Integer> score, Player player) {
 
-        score.put(playerDto, score.get(playerDto) + 1);
+        score.put(player, score.get(player) + 1);
     }
 
-    private void resetScore(Map<PlayerDto, Integer> score) {
+    private void resetScore(Map<Player, Integer> score) {
 
         score.replaceAll((key, value) -> 0);
     }
