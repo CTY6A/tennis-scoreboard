@@ -4,13 +4,7 @@ import java.util.List;
 
 public interface CrudRepository<T> {
 
-    T create(T t);
+    T save(T t);
 
-    List<T> readAll();
-
-    T readById(Integer id);
-
-    T update(T t);
-
-    T delete(T t);
+    List<T> findAll();
 }
