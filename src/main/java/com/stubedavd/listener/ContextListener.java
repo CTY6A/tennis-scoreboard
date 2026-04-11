@@ -1,6 +1,8 @@
 package com.stubedavd.listener;
 
+import com.stubedavd.mapper.MatchScoreMapper;
 import com.stubedavd.mapper.PlayerMapper;
+import com.stubedavd.mapper.PlayerScoreMapper;
 import com.stubedavd.repository.PlayerRepository;
 import com.stubedavd.repository.impl.HibernatePlayerRepository;
 import com.stubedavd.service.MatchScoreCalculationService;
@@ -23,6 +25,8 @@ public class ContextListener implements ServletContextListener {
     public static final String MATCH_SCORE_CALCULATION_SERVICE = "matchScoreCalculationService";
     public static final String NEW_MATCH_SERVICE = "newMatchService";
     public static final String PLAYER_REPOSITORY = "playerRepository";
+    public static final String MATCH_SCORE_MAPPER = "matchScoreMapper";
+    public static final String PLAYER_SCORE_MAPPER = "playerScoreMapper";
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
@@ -32,6 +36,8 @@ public class ContextListener implements ServletContextListener {
         ServletContext servletContext = sce.getServletContext();
 
         PlayerMapper playerMapper = PlayerMapper.INSTANCE;
+        MatchScoreMapper matchScoreMapper = MatchScoreMapper.INSTANCE;
+        PlayerScoreMapper playerScoreMapper = PlayerScoreMapper.INSTANCE;
 
         PlayerRepository playerRepository = new HibernatePlayerRepository();
 
@@ -42,6 +48,8 @@ public class ContextListener implements ServletContextListener {
         servletContext.setAttribute(PLAYER_REPOSITORY, playerRepository);
 
         servletContext.setAttribute(PLAYER_MAPPER, playerMapper);
+        servletContext.setAttribute(MATCH_SCORE_MAPPER, matchScoreMapper);
+        servletContext.setAttribute(PLAYER_SCORE_MAPPER, playerScoreMapper);
 
         servletContext.setAttribute(NEW_MATCH_SERVICE, newMatchService);
         servletContext.setAttribute(ONGOING_MATCH_SERVICE, ongoingMatchService);

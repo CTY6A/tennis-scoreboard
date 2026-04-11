@@ -1,6 +1,7 @@
 package com.stubedavd.mapper;
 
 import com.stubedavd.dto.request.PlayerRequestDto;
+import com.stubedavd.dto.response.PlayerScoreResponseDto;
 import com.stubedavd.entity.Player;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -11,7 +12,7 @@ public interface PlayerMapper {
 
     PlayerMapper INSTANCE = Mappers.getMapper(PlayerMapper.class);
 
-    PlayerRequestDto toPlayerRequestDto(String name);
+    PlayerRequestDto toRequestDto(String name);
 
     @Mapping(target = "id", ignore = true)
     Player toModel(PlayerRequestDto playerRequestDto);

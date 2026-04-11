@@ -5,7 +5,6 @@ import com.stubedavd.exception.NotFoundException;
 import com.stubedavd.listener.ContextListener;
 import com.stubedavd.mapper.PlayerMapper;
 import com.stubedavd.service.NewMatchService;
-import com.stubedavd.service.OngoingMatchService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -60,13 +59,11 @@ public class NewMatchServlet extends BaseServlet {
         String player1Name = request.getParameter("player1");
         String player2Name = request.getParameter("player2");
 
-        PlayerRequestDto player1 = playerMapper.toPlayerRequestDto(player1Name);
-        PlayerRequestDto player2 = playerMapper.toPlayerRequestDto(player2Name);
+        PlayerRequestDto player1 = playerMapper.toRequestDto(player1Name);
+        PlayerRequestDto player2 = playerMapper.toRequestDto(player2Name);
 
         UUID matchId = newMatchService.newMatch(player1, player2);
 
-        System.out.println("New match id: " + matchId);
-
-        response.sendRedirect(request.getContextPath() + "/match-score?id=" + matchId);
+        response.sendRedirect(request.getContextPath() + "/match-score?uuid=" + matchId);
     }
 }
