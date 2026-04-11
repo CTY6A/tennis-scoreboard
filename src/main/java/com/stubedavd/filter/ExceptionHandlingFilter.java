@@ -51,15 +51,11 @@ public class ExceptionHandlingFilter implements Filter {
         } catch (Exception e) {
 
             writeError(httpResponse, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unknown server error");
-
-            //TODO: deltete this
-            writeError(httpResponse, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
     private void writeError(HttpServletResponse response, int status, String message) throws IOException {
 
-        //TODO: create norm response
-        System.out.println(message);
+        response.sendError(status, message);
     }
 }

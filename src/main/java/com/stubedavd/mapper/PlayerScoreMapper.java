@@ -9,5 +9,5 @@ public interface PlayerScoreMapper {
 
     PlayerScoreMapper INSTANCE = Mappers.getMapper(PlayerScoreMapper.class);
 
-    PlayerScoreResponseDto toResponseDto(String name, Integer points, Integer games, Integer sets);
+    PlayerScoreResponseDto toResponseDto(Integer id, String name, Integer sets, Integer games, String points);
 }

@@ -46,21 +46,33 @@
                 </thead>
                 <tbody>
                 <tr class="player1">
-                    <td class="table-text">Rafael Nadal</td>
-                    <td class="table-text">2</td>
-                    <td class="table-text">4</td>
-                    <td class="table-text">40</td>
-                    <td class="table-text">
+                    <td class="table-text">${player1Name}</td>
+                    <td class="table-text">${player1Sets}</td>
+                    <td class="table-text">${player1Games}</td>
+                    <td class="table-text">${player1Points}</td>
+                    <td class="table-text" onclick="sendPost('${player1Id}')">
                         <div class="score-btn">Score</div>
                     </td>
                 </tr>
+
+                <form id="postForm" action="${pageContext.request.contextPath}/match-score?uuid=${uuid}" method="POST" style="display:none;">
+                    <input type="hidden" name="playerId" id="playerId">
+                </form>
+
+                <script>
+                    function sendPost(playerId) {
+                        document.getElementById('playerId').value = playerId;
+                        document.getElementById('postForm').submit();
+                    }
+                </script>
+
                 <tr class="player2">
-                    <td class="table-text">Roger Federer</td>
-                    <td class="table-text">2</td>
-                    <td class="table-text">3</td>
-                    <td class="table-text">15</td>
-                    <td class="table-text">
-                        <div class="score-btn">Score</div>
+                    <td class="table-text">${player2Name}</td>
+                    <td class="table-text">${player2Sets}</td>
+                    <td class="table-text">${player2Games}</td>
+                    <td class="table-text">${player2Points}</td>
+                    <td class="table-text" onclick="sendPost('${player2Id}')">
+                        <div class="score-btn" >Score</div>
                     </td>
                 </tr>
                 </tbody>

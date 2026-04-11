@@ -2,9 +2,11 @@ package com.stubedavd.controller.servlet;
 
 import com.stubedavd.dto.request.PlayerRequestDto;
 import com.stubedavd.exception.NotFoundException;
+import com.stubedavd.exception.ValidationException;
 import com.stubedavd.listener.ContextListener;
 import com.stubedavd.mapper.PlayerMapper;
 import com.stubedavd.service.NewMatchService;
+import com.stubedavd.util.Validator;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -54,10 +56,22 @@ public class NewMatchServlet extends BaseServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+            throws IOException, ServletException {
 
         String player1Name = request.getParameter("player1");
         String player2Name = request.getParameter("player2");
+
+        try {
+
+            Validator.validatePlayers(player1Name, player2Name);
+        } catch (ValidationException e) {
+
+            request.setAttribute("errorMessage", e.getMessage());
+            request.getRequestDispatcher(JSP).forward(request, response);
+        }
+
+        player1Name = player1Name.trim();
+        player2Name = player2Name.trim();
 
         PlayerRequestDto player1 = playerMapper.toRequestDto(player1Name);
         PlayerRequestDto player2 = playerMapper.toRequestDto(player2Name);
