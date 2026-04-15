@@ -10,6 +10,7 @@ import com.stubedavd.util.Validator;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -17,7 +18,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @WebServlet("/new-match")
-public class NewMatchServlet extends BaseServlet {
+public class NewMatchServlet extends HttpServlet {
 
     public static final String JSP = "/WEB-INF/jsp/new-match.jsp";
 

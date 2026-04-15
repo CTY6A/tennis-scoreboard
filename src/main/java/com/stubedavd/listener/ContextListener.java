@@ -1,18 +1,15 @@
 package com.stubedavd.listener;
 
+import com.stubedavd.mapper.MatchMapper;
 import com.stubedavd.mapper.MatchScoreMapper;
 import com.stubedavd.mapper.PlayerMapper;
 import com.stubedavd.mapper.PlayerScoreMapper;
+import com.stubedavd.repository.MatchRepository;
 import com.stubedavd.repository.PlayerRepository;
+import com.stubedavd.repository.impl.HibernateMatchRepository;
 import com.stubedavd.repository.impl.HibernatePlayerRepository;
-import com.stubedavd.service.MatchScoreCalculationService;
-import com.stubedavd.service.MatchScoreService;
-import com.stubedavd.service.NewMatchService;
-import com.stubedavd.service.OngoingMatchService;
-import com.stubedavd.service.impl.MatchScoreCalculationServiceImpl;
-import com.stubedavd.service.impl.MatchScoreServiceImpl;
-import com.stubedavd.service.impl.NewMatchServiceImpl;
-import com.stubedavd.service.impl.OngoingMatchServiceImpl;
+import com.stubedavd.service.*;
+import com.stubedavd.service.impl.*;
 import com.stubedavd.util.HibernateUtil;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
@@ -22,14 +19,17 @@ import jakarta.servlet.annotation.WebListener;
 @WebListener
 public class ContextListener implements ServletContextListener {
 
-    public static final String PLAYER_MAPPER = "playerMapper";
+    public static final String NEW_MATCH_SERVICE = "newMatchService";
+    public static final String MATCH_SCORE_SERVICE = "matchScoreService";
     public static final String ONGOING_MATCH_SERVICE = "ongoingMatchService";
     public static final String MATCH_SCORE_CALCULATION_SERVICE = "matchScoreCalculationService";
-    public static final String NEW_MATCH_SERVICE = "newMatchService";
+    public static final String MATCHES_SERVICE = "matchesService";
     public static final String PLAYER_REPOSITORY = "playerRepository";
+    public static final String MATCH_REPOSITORY = "matchRepository";
+    public static final String PLAYER_MAPPER = "playerMapper";
+    public static final String MATCH_MAPPER = "matchMapper";
     public static final String MATCH_SCORE_MAPPER = "matchScoreMapper";
     public static final String PLAYER_SCORE_MAPPER = "playerScoreMapper";
-    public static final String MATCH_SCORE_SERVICE = "matchScoreService";
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
@@ -41,8 +41,10 @@ public class ContextListener implements ServletContextListener {
         PlayerMapper playerMapper = PlayerMapper.INSTANCE;
         MatchScoreMapper matchScoreMapper = MatchScoreMapper.INSTANCE;
         PlayerScoreMapper playerScoreMapper = PlayerScoreMapper.INSTANCE;
+        MatchMapper matchMapper = MatchMapper.INSTANCE;
 
         PlayerRepository playerRepository = new HibernatePlayerRepository();
+        MatchRepository matchRepository = new HibernateMatchRepository();
 
         OngoingMatchService ongoingMatchService = new OngoingMatchServiceImpl();
         NewMatchService newMatchService = new NewMatchServiceImpl(playerRepository, ongoingMatchService, playerMapper);
@@ -53,17 +55,21 @@ public class ContextListener implements ServletContextListener {
                 matchScoreMapper,
                 playerScoreMapper
         );
+        MatchesService matchesService = new MatchesServiceImpl(matchMapper, matchRepository);
 
         servletContext.setAttribute(PLAYER_REPOSITORY, playerRepository);
+        servletContext.setAttribute(MATCH_REPOSITORY, matchRepository);
 
         servletContext.setAttribute(PLAYER_MAPPER, playerMapper);
         servletContext.setAttribute(MATCH_SCORE_MAPPER, matchScoreMapper);
         servletContext.setAttribute(PLAYER_SCORE_MAPPER, playerScoreMapper);
+        servletContext.setAttribute(MATCH_MAPPER, matchMapper);
 
         servletContext.setAttribute(NEW_MATCH_SERVICE, newMatchService);
         servletContext.setAttribute(ONGOING_MATCH_SERVICE, ongoingMatchService);
         servletContext.setAttribute(MATCH_SCORE_CALCULATION_SERVICE, matchScoreCalculationService);
         servletContext.setAttribute(MATCH_SCORE_SERVICE, matchScoreService);
+        servletContext.setAttribute(MATCHES_SERVICE, matchesService);
     }
 
     @Override

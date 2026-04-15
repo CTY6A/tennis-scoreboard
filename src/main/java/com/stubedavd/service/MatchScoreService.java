@@ -8,5 +8,7 @@ public interface MatchScoreService {
 
     MatchScoreResponseDto getMatchScore(UUID uuid);
 
-    void pointWon(UUID uuid, Integer playerId);
+    void playerScore(UUID uuid, Integer playerId);
+
+    boolean isMatchFinished(UUID uuid);
 }

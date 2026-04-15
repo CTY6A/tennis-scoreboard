@@ -1,11 +1,9 @@
 package com.stubedavd.filter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stubedavd.exception.AlreadyExistException;
 import com.stubedavd.exception.DatabaseException;
 import com.stubedavd.exception.NotFoundException;
 import com.stubedavd.exception.ValidationException;
-import com.stubedavd.listener.ContextListener;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletResponse;

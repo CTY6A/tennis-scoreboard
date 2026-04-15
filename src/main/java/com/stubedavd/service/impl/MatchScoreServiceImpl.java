@@ -6,7 +6,6 @@ import com.stubedavd.dto.response.PlayerScoreResponseDto;
 import com.stubedavd.entity.Player;
 import com.stubedavd.exception.NotFoundException;
 import com.stubedavd.mapper.MatchScoreMapper;
-import com.stubedavd.mapper.PlayerMapper;
 import com.stubedavd.mapper.PlayerScoreMapper;
 import com.stubedavd.model.MatchScoreModel;
 import com.stubedavd.service.MatchScoreCalculationService;
@@ -57,7 +56,7 @@ public class MatchScoreServiceImpl implements MatchScoreService {
             if (player1Points > player2Points) {
 
                 player1PointsString = "AD";
-            } else {
+            } else if (player2Points > player1Points) {
 
                 player2PointsString = "AD";
             }
@@ -101,7 +100,7 @@ public class MatchScoreServiceImpl implements MatchScoreService {
     }
 
     @Override
-    public void pointWon(UUID uuid, Integer playerId) {
+    public void playerScore(UUID uuid, Integer playerId) {
 
         OngoingMatchDto ongoingMatchDto = ongoingMatchService.get(uuid);
         MatchScoreModel matchScoreModel = ongoingMatchDto.matchScoreModel();
@@ -119,5 +118,16 @@ public class MatchScoreServiceImpl implements MatchScoreService {
         }
 
         matchScoreCalculationService.pointWon(matchScoreModel, player);
+
+
+    }
+
+    @Override
+    public boolean isMatchFinished(UUID uuid) {
+
+        OngoingMatchDto ongoingMatchDto = ongoingMatchService.get(uuid);
+        MatchScoreModel matchScoreModel = ongoingMatchDto.matchScoreModel();
+
+        return matchScoreCalculationService.isMatchFinished(matchScoreModel);
     }
 }

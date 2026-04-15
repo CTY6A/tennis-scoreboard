@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="core" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -32,12 +34,12 @@
     <div class="container">
         <h1>Matches</h1>
         <div class="input-container">
-            <input class="input-filter" placeholder="Filter by name" type="text" />
-            <div>
-                <a href="#">
-                    <button class="btn-filter">Reset Filter</button>
-                </a>
-            </div>
+            <form method="get" action="${pageContext.request.contextPath}/matches">
+                <input class="input-filter" placeholder="Filter by name" type="text" name="filter_by_player_name" value="${playerName}"/>
+                <div>
+                    <input class="form-button" type="submit" value="Find">
+                </div>
+            </form>
         </div>
 
         <table class="table-matches">
@@ -46,31 +48,13 @@
                 <th>Player Two</th>
                 <th>Winner</th>
             </tr>
-            <tr>
-                <td>Rafael Nadal</td>
-                <td>Roger Federer</td>
-                <td><span class="winner-name-td">Rafael Nadal</span></td>
-            </tr>
-            <tr>
-                <td>Rafael Nadal</td>
-                <td>Roger Federer</td>
-                <td><span class="winner-name-td">Roger Federer</span></td>
-            </tr>
-            <tr>
-                <td>Rafael Nadal</td>
-                <td>Roger Federer</td>
-                <td><span class="winner-name-td">Rafael Nadal</span></td>
-            </tr>
-            <tr>
-                <td>Rafael Nadal</td>
-                <td>Roger Federer</td>
-                <td><span class="winner-name-td">Roger Federer</span></td>
-            </tr>
-            <tr>
-                <td>Rafael Nadal</td>
-                <td>Roger Federer</td>
-                <td><span class="winner-name-td">Rafael Nadal</span></td>
-            </tr>
+            <core:forEach var="match" items="${requestScope.matches}">
+                <tr>
+                    <td>${match.player1Name()}</td>
+                    <td>${match.player2Name()}</td>
+                    <td><span class="winner-name-td">${match.winnerName()}</span></td>
+                </tr>
+            </core:forEach>
         </table>
 
         <div class="pagination">

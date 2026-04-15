@@ -3,13 +3,12 @@ package com.stubedavd.controller.servlet;
 import com.stubedavd.dto.response.MatchScoreResponseDto;
 import com.stubedavd.exception.NotFoundException;
 import com.stubedavd.listener.ContextListener;
-import com.stubedavd.mapper.PlayerMapper;
 import com.stubedavd.service.MatchScoreService;
-import com.stubedavd.service.NewMatchService;
 import com.stubedavd.util.Validator;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -17,7 +16,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @WebServlet("/match-score")
-public class MatchScoreServlet extends BaseServlet {
+public class MatchScoreServlet extends HttpServlet {
 
     public static final String JSP = "/WEB-INF/jsp/match-score.jsp";
 
@@ -68,7 +67,7 @@ public class MatchScoreServlet extends BaseServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws IOException {
 
         String uuidString = request.getParameter("uuid");
 
@@ -82,8 +81,14 @@ public class MatchScoreServlet extends BaseServlet {
 
         Integer playerId = Integer.parseInt(playerIdString);
 
-        matchScoreService.pointWon(uuid, playerId);
+        matchScoreService.playerScore(uuid, playerId);
 
-        response.sendRedirect(request.getContextPath() + "/match-score?uuid=" + uuidString);
+        if (matchScoreService.isMatchFinished(uuid)) {
+
+            response.sendRedirect(request.getContextPath() + "/matches");
+        } else {
+
+            response.sendRedirect(request.getContextPath() + "/match-score?uuid=" + uuidString);
+        }
     }
 }
