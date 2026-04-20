@@ -23,7 +23,7 @@ public class ExceptionHandlingFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException {
+            throws IOException, ServletException {
 
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
@@ -46,10 +46,10 @@ public class ExceptionHandlingFilter implements Filter {
         } catch (NotFoundException e) {
 
             writeError(httpResponse, HttpServletResponse.SC_NOT_FOUND, e.getMessage());
-        } catch (Exception e) {
+        } /*catch (Exception e) {
 
             writeError(httpResponse, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unknown server error");
-        }
+        }*///TODO: uncomment this
     }
 
     private void writeError(HttpServletResponse response, int status, String message) throws IOException {

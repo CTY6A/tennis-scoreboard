@@ -52,8 +52,10 @@ public class ContextListener implements ServletContextListener {
         MatchScoreService matchScoreService = new MatchScoreServiceImpl(
                 ongoingMatchService,
                 matchScoreCalculationService,
+                matchMapper,
                 matchScoreMapper,
-                playerScoreMapper
+                playerScoreMapper,
+                matchRepository
         );
         MatchesService matchesService = new MatchesServiceImpl(matchMapper, matchRepository);
 

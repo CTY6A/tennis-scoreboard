@@ -6,6 +6,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 @Setter
@@ -20,6 +22,8 @@ public class MatchScoreModel {
     private Map<Player, Integer> points;
     private Map<Player, Integer> games;
     private Map<Player, Integer> sets;
+
+    private Map<Player, List<Integer>> score;
 
     private Boolean tieBreak;
     private Boolean matchFinished;
@@ -43,6 +47,11 @@ public class MatchScoreModel {
         this.sets = new HashMap<>() {{
             put(player1, 0);
             put(player2, 0);
+        }};
+
+        this.score = new HashMap<>() {{
+            put(player1, new LinkedList<>());
+            put(player2, new LinkedList<>());
         }};
 
         this.tieBreak = false;

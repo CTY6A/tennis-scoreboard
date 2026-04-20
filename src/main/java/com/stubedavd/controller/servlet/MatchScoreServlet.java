@@ -1,5 +1,6 @@
 package com.stubedavd.controller.servlet;
 
+import com.stubedavd.dto.response.FinalScoreResponseDto;
 import com.stubedavd.dto.response.MatchScoreResponseDto;
 import com.stubedavd.exception.NotFoundException;
 import com.stubedavd.listener.ContextListener;
@@ -18,7 +19,8 @@ import java.util.UUID;
 @WebServlet("/match-score")
 public class MatchScoreServlet extends HttpServlet {
 
-    public static final String JSP = "/WEB-INF/jsp/match-score.jsp";
+    public static final String MATCH_SCORE_JSP = "/WEB-INF/jsp/match-score.jsp";
+    public static final String FINAL_MATCH_SCORE_JSP = "/WEB-INF/jsp/final-match-score.jsp";
 
     private MatchScoreService matchScoreService;
 
@@ -62,12 +64,12 @@ public class MatchScoreServlet extends HttpServlet {
 
         request.setAttribute("uuid", uuid);
 
-        request.getRequestDispatcher(JSP).forward(request, response);
+        request.getRequestDispatcher(MATCH_SCORE_JSP).forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+            throws IOException, ServletException {
 
         String uuidString = request.getParameter("uuid");
 
@@ -75,20 +77,41 @@ public class MatchScoreServlet extends HttpServlet {
 
         UUID uuid = UUID.fromString(uuidString);
 
-        String playerIdString = request.getParameter("playerId");
-
-        Validator.validatePlayerId(playerIdString);
-
-        Integer playerId = Integer.parseInt(playerIdString);
-
-        matchScoreService.playerScore(uuid, playerId);
-
         if (matchScoreService.isMatchFinished(uuid)) {
 
-            response.sendRedirect(request.getContextPath() + "/matches");
+            matchFinishedProcessing(request, response, uuid);
         } else {
 
-            response.sendRedirect(request.getContextPath() + "/match-score?uuid=" + uuidString);
+            String playerIdString = request.getParameter("playerId");
+
+            Validator.validatePlayerId(playerIdString);
+
+            Integer playerId = Integer.parseInt(playerIdString);
+
+            matchScoreService.playerScore(uuid, playerId);
+
+            if (matchScoreService.isMatchFinished(uuid)) {
+
+                matchFinishedProcessing(request, response, uuid);
+            } else {
+
+                response.sendRedirect(request.getContextPath() + "/match-score?uuid=" + uuidString);
+            }
         }
+    }
+
+    private void matchFinishedProcessing(HttpServletRequest request, HttpServletResponse response, UUID uuid) throws ServletException, IOException {
+
+        FinalScoreResponseDto finalScoreResponseDto = matchScoreService.getFinalScore(uuid);
+
+        matchScoreService.recordMatch(uuid);
+
+        request.setAttribute("player1Name", finalScoreResponseDto.player1FinalScoreResponseDto().name());
+        request.setAttribute("player1Score", finalScoreResponseDto.player1FinalScoreResponseDto().score());
+
+        request.setAttribute("player2Name", finalScoreResponseDto.player2FinalScoreResponseDto().name());
+        request.setAttribute("player2Score", finalScoreResponseDto.player2FinalScoreResponseDto().score());
+
+        request.getRequestDispatcher(FINAL_MATCH_SCORE_JSP).forward(request, response);
     }
 }

@@ -40,6 +40,30 @@ public class HibernateMatchRepository implements MatchRepository {
     }
 
     @Override
+    public Long findCountByName(String playerName) {
+
+        try (Session session = sessionFactory.openSession()) {
+
+            HibernateCriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+
+            CriteriaQuery<Long> criteriaRoot = criteriaBuilder.createQuery(Long.class);
+
+            Root<Match> root = criteriaRoot.from(Match.class);
+
+            criteriaRoot.where(
+                    criteriaBuilder.or(
+                            criteriaBuilder.equal(root.get("player1").get("name"), playerName),
+                            criteriaBuilder.equal(root.get("player2").get("name"), playerName)
+                    )
+            );
+
+            criteriaRoot.select(criteriaBuilder.count(root));
+
+            return session.createQuery(criteriaRoot).getSingleResult();
+        }
+    }
+
+    @Override
     public List<Match> findPage(int pageNumber, int pageSize) {
 
         try (Session session = sessionFactory.openSession()) {

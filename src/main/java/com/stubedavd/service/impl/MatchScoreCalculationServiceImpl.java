@@ -5,6 +5,7 @@ import com.stubedavd.exception.BusinessException;
 import com.stubedavd.model.MatchScoreModel;
 import com.stubedavd.service.MatchScoreCalculationService;
 
+import java.util.List;
 import java.util.Map;
 
 public class MatchScoreCalculationServiceImpl implements MatchScoreCalculationService {
@@ -58,6 +59,8 @@ public class MatchScoreCalculationServiceImpl implements MatchScoreCalculationSe
 
     private void setWonProcessing(MatchScoreModel matchScoreModel, Player player) {
 
+        recordScore(matchScoreModel);
+
         resetScore(matchScoreModel.getGames());
 
         addScore(matchScoreModel.getSets(), player);
@@ -69,6 +72,20 @@ public class MatchScoreCalculationServiceImpl implements MatchScoreCalculationSe
         }
     }
 
+    private void recordScore(MatchScoreModel matchScoreModel) {
+
+        for (Map.Entry<Player, Integer> playerGames : matchScoreModel.getGames().entrySet()) {
+
+            Map<Player, List<Integer>> score = matchScoreModel.getScore();
+
+            List<Integer> playerScore = score.get(playerGames.getKey());
+
+            Integer games = playerGames.getValue();
+
+            playerScore.add(games);
+        }
+    }
+
     private void tieBreakProcessing(MatchScoreModel matchScoreModel, Player player) {
 
         addScore(matchScoreModel.getPoints(), player);
@@ -76,6 +93,9 @@ public class MatchScoreCalculationServiceImpl implements MatchScoreCalculationSe
         if (isTieBreakWon(matchScoreModel, player)) {
 
             resetScore(matchScoreModel.getPoints());
+
+            addScore(matchScoreModel.getGames(), player);
+
             matchScoreModel.setTieBreak(false);
 
             setWonProcessing(matchScoreModel, player);

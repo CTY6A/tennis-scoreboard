@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Tomcat 10.1.52" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 10.1.52" ALTERNATIVE_JRE_ENABLED="true" ALTERNATIVE_JRE_PATH="25" nameIsGenerated="true">
+  <configuration default="false" name="Tomcat 10.1.52" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 10.1.52" ALTERNATIVE_JRE_ENABLED="true" ALTERNATIVE_JRE_PATH="25" nameIsGenerated="true" show_console_on_std_err="true" show_console_on_std_out="true">
     <option name="OPEN_IN_BROWSER_URL" value="http://localhost:8080/tennis_scoreboard_war_exploded" />
     <option name="UPDATING_POLICY" value="restart-server" />
     <deployment>
@@ -12,9 +12,9 @@
     <server-settings>
       <option name="BASE_DIRECTORY_NAME" value="04e62bad-2218-4417-a0f4-98d8c96232d0" />
     </server-settings>
-    <predefined_log_file enabled="true" id="Tomcat" />
-    <predefined_log_file enabled="true" id="Tomcat Catalina" />
-    <predefined_log_file id="Tomcat Manager" />
+    <log_file alias="Лог Tomcat Localhost" path="%IDEA_RUN:CATALINA_BASE%/logs/localhost.*" />
+    <log_file alias="Лог Tomcat Catalina" path="%IDEA_RUN:CATALINA_BASE%/logs/catalina.*" />
+    <log_file checked="false" alias="Лог Tomcat Manager" path="%IDEA_RUN:CATALINA_BASE%/logs/manager.*" />
     <predefined_log_file id="Tomcat Host Manager" />
     <predefined_log_file id="Tomcat Localhost Access" />
     <RunnerSettings RunnerId="AppServerDebuggerRunner">

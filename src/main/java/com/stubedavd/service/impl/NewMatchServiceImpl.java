@@ -33,10 +33,10 @@ public class NewMatchServiceImpl implements NewMatchService {
     public UUID newMatch(PlayerRequestDto playerRequestDto1, PlayerRequestDto playerRequestDto2) {
 
         Player player1 = playerRepository.findByName(playerRequestDto1.name())
-                .orElse(playerRepository.save(playerMapper.toModel(playerRequestDto1)));
+                .orElseGet(() -> playerRepository.save(playerMapper.toModel(playerRequestDto1)));
 
         Player player2 = playerRepository.findByName(playerRequestDto2.name())
-                .orElse(playerRepository.save(playerMapper.toModel(playerRequestDto2)));
+                .orElseGet(() -> playerRepository.save(playerMapper.toModel(playerRequestDto2)));
 
         return ongoingMatchService.save(player1, player2);
     }

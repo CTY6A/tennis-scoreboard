@@ -113,4 +113,23 @@ public final class Validator {
             throw new ValidationException("Player id is invalid");
         }
     }
+
+    public static void validatePlayerName(String playerName) {
+
+        if (!playerName.matches("^[A-Za-z]+(?:[-\\s][A-Za-z]+)*$")) {
+
+            throw new ValidationException("Player name is invalid");
+        }
+    }
+
+    public static void validatePageNumber(String pageNumberString) {
+
+        try {
+
+            Integer.parseInt(pageNumberString);
+        } catch (NumberFormatException e) {
+
+            throw new ValidationException("Page number is invalid");
+        }
+    }
 }

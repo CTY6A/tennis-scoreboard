@@ -1,5 +1,4 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="core" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -34,13 +33,26 @@
     <div class="container">
         <h1>Matches</h1>
         <div class="input-container">
-            <form method="get" action="${pageContext.request.contextPath}/matches">
-                <input class="input-filter" placeholder="Filter by name" type="text" name="filter_by_player_name" value="${playerName}"/>
-                <div>
-                    <input class="form-button" type="submit" value="Find">
-                </div>
-            </form>
+            <input class="input-filter" placeholder="Filter by name" type="text" name="playerNameFilter" id="playerNameFilter" value="${playerName}"/>
+            <div>
+                <a onclick="sendGet(1)">
+                    <button class="btn-filter">Use Filter</button>
+                </a>
+            </div>
         </div>
+
+        <form id="getForm" action="${pageContext.request.contextPath}/matches" method="GET" style="display:none;">
+            <input type="hidden" name="page" id="page">
+            <input type="hidden" name="filter_by_player_name" id="filter_by_player_name">
+        </form>
+
+        <script>
+            function sendGet(page) {
+                document.getElementById('page').value = page;
+                document.getElementById('filter_by_player_name').value = document.getElementById('playerNameFilter').value;
+                document.getElementById('getForm').submit();
+            }
+        </script>
 
         <table class="table-matches">
             <tr>
@@ -48,21 +60,21 @@
                 <th>Player Two</th>
                 <th>Winner</th>
             </tr>
-            <core:forEach var="match" items="${requestScope.matches}">
+            <c:forEach var="match" items="${requestScope.matches}">
                 <tr>
                     <td>${match.player1Name()}</td>
                     <td>${match.player2Name()}</td>
                     <td><span class="winner-name-td">${match.winnerName()}</span></td>
                 </tr>
-            </core:forEach>
+            </c:forEach>
         </table>
 
         <div class="pagination">
-            <a class="prev" href="#"> < </a>
-            <a class="num-page current" href="#">1</a>
-            <a class="num-page" href="#">2</a>
-            <a class="num-page" href="#">3</a>
-            <a class="next" href="#"> > </a>
+            <a class="prev" onclick="sendGet(${pageNumber} - 1)"> < </a>
+            <c:forEach begin="1" end="${pageCount}" varStatus="loop">
+                <a class="num-page <c:if test="${loop.index == pageNumber}"> current</c:if>" onclick="sendGet(${loop.index})">${loop.index}</a>
+            </c:forEach>
+            <a class="next" onclick="sendGet(${pageNumber} + 1)"> > </a>
         </div>
     </div>
 </main>

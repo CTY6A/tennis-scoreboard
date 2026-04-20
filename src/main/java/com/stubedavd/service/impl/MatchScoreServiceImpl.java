@@ -1,13 +1,17 @@
 package com.stubedavd.service.impl;
 
 import com.stubedavd.dto.OngoingMatchDto;
+import com.stubedavd.dto.response.FinalScoreResponseDto;
 import com.stubedavd.dto.response.MatchScoreResponseDto;
 import com.stubedavd.dto.response.PlayerScoreResponseDto;
+import com.stubedavd.entity.Match;
 import com.stubedavd.entity.Player;
 import com.stubedavd.exception.NotFoundException;
+import com.stubedavd.mapper.MatchMapper;
 import com.stubedavd.mapper.MatchScoreMapper;
 import com.stubedavd.mapper.PlayerScoreMapper;
 import com.stubedavd.model.MatchScoreModel;
+import com.stubedavd.repository.MatchRepository;
 import com.stubedavd.service.MatchScoreCalculationService;
 import com.stubedavd.service.MatchScoreService;
 import com.stubedavd.service.OngoingMatchService;
@@ -19,20 +23,27 @@ public class MatchScoreServiceImpl implements MatchScoreService {
     OngoingMatchService ongoingMatchService;
     MatchScoreCalculationService matchScoreCalculationService;
 
+    MatchMapper matchMapper;
     MatchScoreMapper matchScoreMapper;
     PlayerScoreMapper playerScoreMapper;
+
+    MatchRepository matchRepository;
 
     public MatchScoreServiceImpl(
             OngoingMatchService ongoingMatchService,
             MatchScoreCalculationService matchScoreCalculationService,
+            MatchMapper matchMapper,
             MatchScoreMapper matchScoreMapper,
-            PlayerScoreMapper playerScoreMapper
+            PlayerScoreMapper playerScoreMapper,
+            MatchRepository matchRepository
     ) {
 
         this.ongoingMatchService = ongoingMatchService;
         this.matchScoreCalculationService = matchScoreCalculationService;
+        this.matchMapper = matchMapper;
         this.matchScoreMapper = matchScoreMapper;
         this.playerScoreMapper = playerScoreMapper;
+        this.matchRepository = matchRepository;
     }
 
     @Override
@@ -100,6 +111,41 @@ public class MatchScoreServiceImpl implements MatchScoreService {
     }
 
     @Override
+    public FinalScoreResponseDto getFinalScore(UUID uuid) {
+
+        OngoingMatchDto ongoingMatchDto = ongoingMatchService.get(uuid);
+
+        MatchScoreModel matchScoreModel = ongoingMatchDto.matchScoreModel();
+
+        return matchScoreMapper.toFinalScoreResponseDto(
+                playerScoreMapper.toFinalScoreResponseDto(
+                        ongoingMatchDto.player1().getName(),
+                        matchScoreModel.getScore().get(ongoingMatchDto.player1())
+                ),
+                playerScoreMapper.toFinalScoreResponseDto(
+                        ongoingMatchDto.player2().getName(),
+                        matchScoreModel.getScore().get(ongoingMatchDto.player2())
+                )
+        );
+    }
+
+    @Override
+    public void recordMatch(UUID uuid) {
+
+        OngoingMatchDto ongoingMatchDto = ongoingMatchService.get(uuid);
+
+        Match match = matchMapper.toModel(
+                ongoingMatchDto.player1(),
+                ongoingMatchDto.player2(),
+                ongoingMatchDto.matchScoreModel().getWinner()
+        );
+
+        matchRepository.save(match);
+
+        ongoingMatchService.delete(uuid);
+    }
+
+    @Override
     public void playerScore(UUID uuid, Integer playerId) {
 
         OngoingMatchDto ongoingMatchDto = ongoingMatchService.get(uuid);
@@ -118,8 +164,6 @@ public class MatchScoreServiceImpl implements MatchScoreService {
         }
 
         matchScoreCalculationService.pointWon(matchScoreModel, player);
-
-
     }
 
     @Override

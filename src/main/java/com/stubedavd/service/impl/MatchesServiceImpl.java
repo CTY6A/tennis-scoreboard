@@ -1,7 +1,6 @@
 package com.stubedavd.service.impl;
 
 import com.stubedavd.dto.response.MatchResponseDto;
-import com.stubedavd.entity.Match;
 import com.stubedavd.mapper.MatchMapper;
 import com.stubedavd.repository.MatchRepository;
 import com.stubedavd.service.MatchesService;
@@ -30,6 +29,12 @@ public class MatchesServiceImpl implements MatchesService {
     }
 
     @Override
+    public Long getCountByName(String playerName) {
+
+        return matchRepository.findCountByName(playerName);
+    }
+
+    @Override
     public List<MatchResponseDto> getPage(int pageNumber, int pageSize) {
 
         return matchRepository
@@ -44,8 +49,16 @@ public class MatchesServiceImpl implements MatchesService {
     }
 
     @Override
-    public List<Match> getByPlayerName(String playerName, int pageNumber, int pageSize) {
+    public List<MatchResponseDto> getByPlayerName(String playerName, int pageNumber, int pageSize) {
 
-        return matchRepository.findByPlayerName(playerName, pageNumber, pageSize);
+        return matchRepository
+                .findByPlayerName(playerName, pageNumber, pageSize)
+                .stream()
+                .map(match -> matchMapper.toResponseDto(
+                        match.getPlayer1().getName(),
+                        match.getPlayer2().getName(),
+                        match.getWinner().getName()
+                ))
+                .toList();
     }
 }
