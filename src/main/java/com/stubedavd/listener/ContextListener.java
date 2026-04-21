@@ -6,10 +6,11 @@ import com.stubedavd.mapper.PlayerMapper;
 import com.stubedavd.mapper.PlayerScoreMapper;
 import com.stubedavd.repository.MatchRepository;
 import com.stubedavd.repository.PlayerRepository;
-import com.stubedavd.repository.impl.HibernateMatchRepository;
-import com.stubedavd.repository.impl.HibernatePlayerRepository;
-import com.stubedavd.service.*;
-import com.stubedavd.service.impl.*;
+import com.stubedavd.service.MatchScoreCalculationService;
+import com.stubedavd.service.MatchScoreService;
+import com.stubedavd.service.MatchesService;
+import com.stubedavd.service.NewMatchService;
+import com.stubedavd.service.OngoingMatchService;
 import com.stubedavd.util.HibernateUtil;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
@@ -43,13 +44,13 @@ public class ContextListener implements ServletContextListener {
         PlayerScoreMapper playerScoreMapper = PlayerScoreMapper.INSTANCE;
         MatchMapper matchMapper = MatchMapper.INSTANCE;
 
-        PlayerRepository playerRepository = new HibernatePlayerRepository();
-        MatchRepository matchRepository = new HibernateMatchRepository();
+        PlayerRepository playerRepository = new PlayerRepository();
+        MatchRepository matchRepository = new MatchRepository();
 
-        OngoingMatchService ongoingMatchService = new OngoingMatchServiceImpl();
-        NewMatchService newMatchService = new NewMatchServiceImpl(playerRepository, ongoingMatchService, playerMapper);
-        MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationServiceImpl();
-        MatchScoreService matchScoreService = new MatchScoreServiceImpl(
+        OngoingMatchService ongoingMatchService = new OngoingMatchService();
+        NewMatchService newMatchService = new NewMatchService(playerRepository, ongoingMatchService, playerMapper);
+        MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService();
+        MatchScoreService matchScoreService = new MatchScoreService(
                 ongoingMatchService,
                 matchScoreCalculationService,
                 matchMapper,
@@ -57,7 +58,7 @@ public class ContextListener implements ServletContextListener {
                 playerScoreMapper,
                 matchRepository
         );
-        MatchesService matchesService = new MatchesServiceImpl(matchMapper, matchRepository);
+        MatchesService matchesService = new MatchesService(matchMapper, matchRepository);
 
         servletContext.setAttribute(PLAYER_REPOSITORY, playerRepository);
         servletContext.setAttribute(MATCH_REPOSITORY, matchRepository);

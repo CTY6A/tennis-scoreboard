@@ -4,7 +4,6 @@ import com.stubedavd.entity.Player;
 import com.stubedavd.exception.BusinessException;
 import com.stubedavd.model.MatchScoreModel;
 import com.stubedavd.service.MatchScoreCalculationService;
-import com.stubedavd.service.impl.MatchScoreCalculationServiceImpl;
 import org.junit.jupiter.api.*;
 
 public class TennisMatchScoreTest {
@@ -17,7 +16,7 @@ public class TennisMatchScoreTest {
     @BeforeEach
     void setUpBeforeClass() {
 
-        matchScoreCalculationService = new MatchScoreCalculationServiceImpl();
+        matchScoreCalculationService = new MatchScoreCalculationService();
 
         player1 = new Player();
         player1.setName("Nadal");

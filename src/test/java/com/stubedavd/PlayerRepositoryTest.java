@@ -3,7 +3,6 @@ package com.stubedavd;
 import com.stubedavd.entity.Player;
 import com.stubedavd.exception.AlreadyExistException;
 import com.stubedavd.repository.PlayerRepository;
-import com.stubedavd.repository.impl.HibernatePlayerRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +13,7 @@ public class PlayerRepositoryTest {
     @BeforeAll
     public static void setUp() {
 
-        playerRepository = new HibernatePlayerRepository();
+        playerRepository = new PlayerRepository();
     }
 
     @Test
