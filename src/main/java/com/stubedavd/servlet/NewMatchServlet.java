@@ -1,4 +1,4 @@
-package com.stubedavd.controller.servlet;
+package com.stubedavd.servlet;
 
 import com.stubedavd.dto.request.PlayerRequestDto;
 import com.stubedavd.exception.NotFoundException;

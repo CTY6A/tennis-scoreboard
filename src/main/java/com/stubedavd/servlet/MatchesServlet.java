@@ -1,4 +1,4 @@
-package com.stubedavd.controller.servlet;
+package com.stubedavd.servlet;
 
 import com.stubedavd.dto.response.MatchResponseDto;
 import com.stubedavd.exception.NotFoundException;
@@ -66,6 +66,7 @@ public class MatchesServlet extends HttpServlet {
 
         List<MatchResponseDto> matches;
         int pageCount;
+        Long matchesCount;
 
         String playerName = request.getParameter("filter_by_player_name");
 
@@ -75,7 +76,9 @@ public class MatchesServlet extends HttpServlet {
 
             Validator.validatePlayerName(playerName);
 
-            pageCount = (int) (matchesService.getCountByName(playerName) / PAGE_SIZE);
+            matchesCount = matchesService.getCountByName(playerName);
+
+            pageCount = (int) ((matchesCount + PAGE_SIZE - 1) / PAGE_SIZE);
 
             if (pageNumber > pageCount - 1 && pageCount != 0) {
 
@@ -85,7 +88,9 @@ public class MatchesServlet extends HttpServlet {
             matches = matchesService.getByPlayerName(playerName, pageNumber, PAGE_SIZE);
         } else {
 
-            pageCount = (int) (matchesService.getTotalCount() / PAGE_SIZE);
+            matchesCount = matchesService.getTotalCount();
+
+            pageCount = (int) ((matchesCount + PAGE_SIZE - 1) / PAGE_SIZE);
 
             if (pageNumber > pageCount - 1 && pageCount != 0) {
 
@@ -99,6 +104,9 @@ public class MatchesServlet extends HttpServlet {
         request.setAttribute("playerName", playerName);
         request.setAttribute("pageCount", pageCount);
         request.setAttribute("pageNumber", pageNumber + 1 );
+        request.setAttribute("matchesCount", matchesCount);
+        request.setAttribute("matchesFrom", pageNumber * PAGE_SIZE);
+        request.setAttribute("matchesTo", pageNumber * PAGE_SIZE + matches.size());
 
         request.getRequestDispatcher(JSP).forward(request, response);
     }

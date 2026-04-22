@@ -46,10 +46,10 @@ public class ExceptionHandlingFilter implements Filter {
         } catch (NotFoundException e) {
 
             writeError(httpResponse, HttpServletResponse.SC_NOT_FOUND, e.getMessage());
-        } /*catch (Exception e) {
+        } catch (Exception e) {
 
             writeError(httpResponse, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unknown server error");
-        }*///TODO: uncomment this
+        }
     }
 
     private void writeError(HttpServletResponse response, int status, String message) throws IOException {

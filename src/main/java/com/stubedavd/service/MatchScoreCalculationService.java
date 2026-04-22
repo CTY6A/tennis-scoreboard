@@ -12,6 +12,7 @@ public class MatchScoreCalculationService {
     public static final int GAME_ADVANTAGE_LIMIT = 4;
     public static final int SET_ADVANTAGE_LIMIT = 6;
     public static final int TIE_BREAK_ADVANTAGE_LIMIT = 7;
+    public static final int MATCH_ADVANTAGE_LIMIT = 2;
 
     public Boolean isMatchFinished(MatchScoreModel matchScoreModel) {
 
@@ -123,7 +124,7 @@ public class MatchScoreCalculationService {
 
     private Boolean isMatchWon(MatchScoreModel matchScoreModel, Player player) {
 
-        return matchScoreModel.getSets().get(player) == 2;
+        return matchScoreModel.getSets().get(player) == MATCH_ADVANTAGE_LIMIT;
     }
 
     private Boolean isTieBreakWon(MatchScoreModel matchScoreModel, Player player) {
@@ -137,7 +138,7 @@ public class MatchScoreCalculationService {
 
     private Boolean isPlayerWonThisPart(
             Map<Player, Integer> calculationSubject,
-            Player playerDto,
+            Player player,
             Integer advantageLimit
     ) {
 
@@ -146,7 +147,7 @@ public class MatchScoreCalculationService {
 
         for(Map.Entry<Player, Integer> entry : calculationSubject.entrySet()) {
 
-            if (playerDto.equals(entry.getKey())) {
+            if (player.equals(entry.getKey())) {
                 winnerCounter = entry.getValue();
             } else {
                 loserCounter = entry.getValue();

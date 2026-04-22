@@ -71,10 +71,14 @@
 
         <div class="pagination">
             <a class="prev" onclick="sendGet(${pageNumber} - 1)"> < </a>
-            <c:forEach begin="1" end="${pageCount}" varStatus="loop">
-                <a class="num-page <c:if test="${loop.index == pageNumber}"> current</c:if>" onclick="sendGet(${loop.index})">${loop.index}</a>
+            <a class="num-page <c:if test="${1 == pageNumber}"> current</c:if>" onclick="sendGet(${1})">1</a>
+            <c:forEach begin="2" end="${pageCount}" varStatus="loop">
+                <a class="num-page
+                   <c:if test="${loop.index == pageNumber}"> current</c:if>"
+                   onclick="sendGet(${loop.index})">${loop.index}</a>
             </c:forEach>
             <a class="next" onclick="sendGet(${pageNumber} + 1)"> > </a>
+            <p> ${matchesFrom}-${matchesTo} of ${matchesCount}</p>
         </div>
     </div>
 </main>
