@@ -14,6 +14,11 @@ public abstract class Score {
         score.put(player, score.getOrDefault(player, 0) + 1);
     }
 
+    public int getScore(Player player) {
+
+        return score.getOrDefault(player, 0);
+    }
+
     public boolean isRoundWon(Player player) {
 
         Integer winnerCounter = 0;
@@ -36,5 +41,17 @@ public abstract class Score {
     public void resetScore() {
 
         score.replaceAll((key, value) -> 0);
+    }
+
+    protected boolean checkTieBreak() {
+
+        for (Map.Entry<Player, Integer> entry : score.entrySet()) {
+
+            if (entry.getValue() != getAdvantageLimit()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

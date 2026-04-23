@@ -1,6 +1,6 @@
 package com.stubedavd.logic;
 
-public class Set extends Score {
+public class MatchSet extends Score {
 
     public static final int MATCH_ADVANTAGE_LIMIT = 2;
 

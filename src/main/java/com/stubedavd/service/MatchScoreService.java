@@ -52,8 +52,8 @@ public class MatchScoreService {
         String player1PointsString;
         String player2PointsString;
 
-        Integer player1Points = matchScoreModel.getPoints().get(ongoingMatchDto.player1());
-        Integer player2Points = matchScoreModel.getPoints().get(ongoingMatchDto.player2());
+        int player1Points = matchScoreModel.getPoints().getScore(ongoingMatchDto.player1());
+        int player2Points = matchScoreModel.getPoints().getScore(ongoingMatchDto.player2());
 
         if (player1Points >= 4 || player2Points >= 4) {
 
@@ -87,16 +87,16 @@ public class MatchScoreService {
         PlayerScoreResponseDto playerScoreResponseDto1 = playerScoreMapper.toResponseDto(
                 ongoingMatchDto.player1().getId(),
                 ongoingMatchDto.player1().getName(),
-                matchScoreModel.getSets().get(ongoingMatchDto.player1()),
-                matchScoreModel.getGames().get(ongoingMatchDto.player1()),
+                matchScoreModel.getSets().getScore(ongoingMatchDto.player1()),
+                matchScoreModel.getGames().getScore(ongoingMatchDto.player1()),
                 player1PointsString
         );
 
         PlayerScoreResponseDto playerScoreResponseDto2 = playerScoreMapper.toResponseDto(
                 ongoingMatchDto.player2().getId(),
                 ongoingMatchDto.player2().getName(),
-                matchScoreModel.getSets().get(ongoingMatchDto.player2()),
-                matchScoreModel.getGames().get(ongoingMatchDto.player2()),
+                matchScoreModel.getSets().getScore(ongoingMatchDto.player2()),
+                matchScoreModel.getGames().getScore(ongoingMatchDto.player2()),
                 player2PointsString
         );
 
@@ -115,11 +115,18 @@ public class MatchScoreService {
         return matchScoreMapper.toFinalScoreResponseDto(
                 playerScoreMapper.toFinalScoreResponseDto(
                         ongoingMatchDto.player1().getName(),
-                        matchScoreModel.getScore().get(ongoingMatchDto.player1())
+                        matchScoreModel
+                                .getScore()
+                                .stream()
+                                .map(matchGame -> matchGame.getScore(ongoingMatchDto.player1()))
+                                .toList()
                 ),
                 playerScoreMapper.toFinalScoreResponseDto(
                         ongoingMatchDto.player2().getName(),
-                        matchScoreModel.getScore().get(ongoingMatchDto.player2())
+                        matchScoreModel.getScore()
+                                .stream()
+                                .map(matchGame -> matchGame.getScore(ongoingMatchDto.player2()))
+                                .toList()
                 )
         );
     }

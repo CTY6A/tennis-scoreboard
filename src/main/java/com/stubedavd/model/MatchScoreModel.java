@@ -1,6 +1,9 @@
 package com.stubedavd.model;
 
 import com.stubedavd.entity.Player;
+import com.stubedavd.logic.MatchGame;
+import com.stubedavd.logic.MatchPoint;
+import com.stubedavd.logic.MatchSet;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,22 +13,22 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-@Setter
 @Getter
+@Setter
 @ToString
 public class MatchScoreModel {
 
-    private Player player1;
-    private Player player2;
+    private final Player player1;
+    private final Player player2;
+
     private Player winner;
 
-    private Map<Player, Integer> points;
-    private Map<Player, Integer> games;
-    private Map<Player, Integer> sets;
+    private MatchPoint points;
+    private MatchGame games;
+    private MatchSet sets;
 
-    private Map<Player, List<Integer>> score;
+    private final List<MatchGame> score;
 
-    private Boolean tieBreak;
     private Boolean matchFinished;
 
     public MatchScoreModel(Player player1, Player player2) {
@@ -34,27 +37,12 @@ public class MatchScoreModel {
         this.player2 = player2;
         this.winner = null;
 
-        this.points = new HashMap<>() {{
-            put(player1, 0);
-            put(player2, 0);
-        }};
+        this.points = new MatchPoint();
+        this.games = new MatchGame();
+        this.sets = new MatchSet();
 
-        this.games = new HashMap<>() {{
-            put(player1, 0);
-            put(player2, 0);
-        }};
+        this.score = new LinkedList<>();
 
-        this.sets = new HashMap<>() {{
-            put(player1, 0);
-            put(player2, 0);
-        }};
-
-        this.score = new HashMap<>() {{
-            put(player1, new LinkedList<>());
-            put(player2, new LinkedList<>());
-        }};
-
-        this.tieBreak = false;
         this.matchFinished = false;
     }
 }
