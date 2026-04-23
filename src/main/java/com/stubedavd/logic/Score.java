@@ -38,11 +38,6 @@ public abstract class Score {
 
     protected abstract int getAdvantageLimit();
 
-    public void resetScore() {
-
-        score.replaceAll((key, value) -> 0);
-    }
-
     protected boolean checkTieBreak() {
 
         for (Map.Entry<Player, Integer> entry : score.entrySet()) {
