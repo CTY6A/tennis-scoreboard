@@ -1,6 +1,6 @@
-package com.stubedavd.logic;
+package com.stubedavd.model;
 
-public class MatchSet extends Score {
+public class MatchSet extends MatchScore {
 
     public static final int MATCH_ADVANTAGE_LIMIT = 2;
 

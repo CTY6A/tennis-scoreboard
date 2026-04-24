@@ -1,11 +1,11 @@
-package com.stubedavd.logic;
+package com.stubedavd.model;
 
 import com.stubedavd.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class Score {
+public abstract class MatchScore {
 
     private final Map<Player, Integer> score = new HashMap<>();
 

@@ -1,9 +1,6 @@
 package com.stubedavd.model;
 
 import com.stubedavd.entity.Player;
-import com.stubedavd.logic.MatchGame;
-import com.stubedavd.logic.MatchPoint;
-import com.stubedavd.logic.MatchSet;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

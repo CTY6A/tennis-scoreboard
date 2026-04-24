@@ -1,7 +1,6 @@
 package com.stubedavd.mapper;
 
 import com.stubedavd.dto.request.PlayerRequestDto;
-import com.stubedavd.dto.response.PlayerScoreResponseDto;
 import com.stubedavd.entity.Player;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

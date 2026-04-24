@@ -9,21 +9,21 @@ import java.util.UUID;
 
 public class NewMatchService {
 
-    PlayerRepository playerRepository;
-
     OngoingMatchService ongoingMatchService;
 
     PlayerMapper playerMapper;
 
+    PlayerRepository playerRepository;
+
     public NewMatchService(
-            PlayerRepository playerRepository,
             OngoingMatchService ongoingMatchService,
-            PlayerMapper playerMapper
+            PlayerMapper playerMapper,
+            PlayerRepository playerRepository
     ) {
 
-        this.playerRepository = playerRepository;
         this.ongoingMatchService = ongoingMatchService;
         this.playerMapper = playerMapper;
+        this.playerRepository = playerRepository;
     }
 
     public UUID newMatch(PlayerRequestDto playerRequestDto1, PlayerRequestDto playerRequestDto2) {

@@ -1,11 +1,11 @@
-package com.stubedavd.logic;
+package com.stubedavd.model;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class MatchPoint extends Score {
+public class MatchPoint extends MatchScore {
 
     public static final int POINTS_ADVANTAGE_LIMIT = 4;
     public static final int TIE_BREAK_ADVANTAGE_LIMIT = 7;

@@ -105,7 +105,7 @@ public class MatchRepository {
         }
     }
 
-    public Match save(Match match) {
+    public void save(Match match) {
 
         try (Session session = sessionFactory.openSession()) {
 
@@ -113,7 +113,6 @@ public class MatchRepository {
 
             session.beginTransaction().commit();
 
-            return match;
         } catch (ConstraintViolationException e) {
 
             throw new AlreadyExistException("Match already exists");

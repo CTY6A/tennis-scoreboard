@@ -1,10 +1,13 @@
 package com.stubedavd.servlet;
 
-import com.stubedavd.dto.response.FinalScoreResponseDto;
-import com.stubedavd.dto.response.MatchScoreResponseDto;
+import com.stubedavd.dto.OngoingMatchDto;
+import com.stubedavd.entity.Player;
 import com.stubedavd.exception.NotFoundException;
 import com.stubedavd.listener.ContextListener;
-import com.stubedavd.service.MatchScoreService;
+import com.stubedavd.model.MatchScoreModel;
+import com.stubedavd.service.FinishedMatchesPersistenceService;
+import com.stubedavd.service.MatchScoreCalculationService;
+import com.stubedavd.service.OngoingMatchService;
 import com.stubedavd.util.Validator;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -22,19 +25,38 @@ public class MatchScoreServlet extends HttpServlet {
     public static final String MATCH_SCORE_JSP = "/WEB-INF/jsp/match-score.jsp";
     public static final String FINAL_MATCH_SCORE_JSP = "/WEB-INF/jsp/final-match-score.jsp";
 
-    private MatchScoreService matchScoreService;
+    private OngoingMatchService ongoingMatchService;
+    private MatchScoreCalculationService matchScoreCalculationService;
+    private FinishedMatchesPersistenceService finishedMatchesPersistenceService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
 
         super.init(config);
 
-        matchScoreService =
-                (MatchScoreService) config.getServletContext().getAttribute(ContextListener.MATCH_SCORE_SERVICE);
+        ongoingMatchService =
+                (OngoingMatchService) config.getServletContext().getAttribute(ContextListener.ONGOING_MATCH_SERVICE);
 
-        if (matchScoreService == null) {
+        if (ongoingMatchService == null) {
+            throw new NotFoundException("Ongoing Match service not found");
+        }
 
-            throw new NotFoundException("Match score service not found");
+        matchScoreCalculationService =
+                (MatchScoreCalculationService) config
+                        .getServletContext()
+                        .getAttribute(ContextListener.MATCH_SCORE_CALCULATION_SERVICE);
+
+        if (matchScoreCalculationService == null) {
+            throw new NotFoundException("Match score calculation service not found");
+        }
+
+        finishedMatchesPersistenceService =
+                (FinishedMatchesPersistenceService) config
+                        .getServletContext()
+                        .getAttribute(ContextListener.FINISHED_MATCHES_PERSISTENCE_SERVICE);
+
+        if (finishedMatchesPersistenceService == null) {
+            throw new NotFoundException("Finished Matches persistence service not found");
         }
     }
 
@@ -43,24 +65,57 @@ public class MatchScoreServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String uuidString = request.getParameter("uuid");
-
         Validator.validateUuid(uuidString);
-
         UUID uuid = UUID.fromString(uuidString);
+        OngoingMatchDto ongoingMatchDto = ongoingMatchService.get(uuid);
+        MatchScoreModel matchScoreModel = ongoingMatchDto.matchScoreModel();
 
-        MatchScoreResponseDto matchScoreResponseDto = matchScoreService.getMatchScore(uuid);
+        String player1PointsString;
+        String player2PointsString;
 
-        request.setAttribute("player1Id", matchScoreResponseDto.playerScoreResponseDto1().id());
-        request.setAttribute("player1Name", matchScoreResponseDto.playerScoreResponseDto1().name());
-        request.setAttribute("player1Sets", matchScoreResponseDto.playerScoreResponseDto1().sets());
-        request.setAttribute("player1Games", matchScoreResponseDto.playerScoreResponseDto1().games());
-        request.setAttribute("player1Points", matchScoreResponseDto.playerScoreResponseDto1().points());
+        int player1Points = matchScoreModel.getPoints().getScore(ongoingMatchDto.player1());
+        int player2Points = matchScoreModel.getPoints().getScore(ongoingMatchDto.player2());
 
-        request.setAttribute("player2Id", matchScoreResponseDto.playerScoreResponseDto2().id());
-        request.setAttribute("player2Name", matchScoreResponseDto.playerScoreResponseDto2().name());
-        request.setAttribute("player2Sets", matchScoreResponseDto.playerScoreResponseDto2().sets());
-        request.setAttribute("player2Games", matchScoreResponseDto.playerScoreResponseDto2().games());
-        request.setAttribute("player2Points", matchScoreResponseDto.playerScoreResponseDto2().points());
+        if (player1Points >= 4 || player2Points >= 4) {
+
+            player1PointsString = "40";
+            player2PointsString = "40";
+
+            if (player1Points > player2Points) {
+
+                player1PointsString = "AD";
+            } else if (player2Points > player1Points) {
+
+                player2PointsString = "AD";
+            }
+        } else {
+
+            player1PointsString = switch (player1Points) {
+                case 1 -> "15";
+                case 2 -> "30";
+                case 3 -> "40";
+                default -> "0";
+            };
+
+            player2PointsString = switch (player2Points) {
+                case 1 -> "15";
+                case 2 -> "30";
+                case 3 -> "40";
+                default -> "0";
+            };
+        }
+
+        request.setAttribute("player1Id", ongoingMatchDto.player1().getId());
+        request.setAttribute("player1Name", ongoingMatchDto.player1().getName());
+        request.setAttribute("player1Sets", matchScoreModel.getSets().getScore(ongoingMatchDto.player1()));
+        request.setAttribute("player1Games", matchScoreModel.getGames().getScore(ongoingMatchDto.player1()));
+        request.setAttribute("player1Points", player1PointsString);
+
+        request.setAttribute("player2Id", ongoingMatchDto.player2().getId());
+        request.setAttribute("player2Name", ongoingMatchDto.player2().getName());
+        request.setAttribute("player2Sets", matchScoreModel.getSets().getScore(ongoingMatchDto.player2()));
+        request.setAttribute("player2Games", matchScoreModel.getGames().getScore(ongoingMatchDto.player2()));
+        request.setAttribute("player2Points", player2PointsString);
 
         request.setAttribute("uuid", uuid);
 
@@ -72,25 +127,32 @@ public class MatchScoreServlet extends HttpServlet {
             throws IOException, ServletException {
 
         String uuidString = request.getParameter("uuid");
-
         Validator.validateUuid(uuidString);
-
         UUID uuid = UUID.fromString(uuidString);
+        OngoingMatchDto ongoingMatchDto = ongoingMatchService.get(uuid);
+        MatchScoreModel matchScoreModel = ongoingMatchDto.matchScoreModel();
 
-        if (matchScoreService.isMatchFinished(uuid)) {
+        if (matchScoreCalculationService.isMatchFinished(matchScoreModel)) {
 
             matchFinishedProcessing(request, response, uuid);
         } else {
 
             String playerIdString = request.getParameter("playerId");
-
             Validator.validatePlayerId(playerIdString);
-
             Integer playerId = Integer.parseInt(playerIdString);
 
-            matchScoreService.playerScore(uuid, playerId);
+            Player player;
+            if (playerId.equals(ongoingMatchDto.player1().getId())) {
+                player = ongoingMatchDto.player1();
+            } else if (playerId.equals(ongoingMatchDto.player2().getId())) {
+                player = ongoingMatchDto.player2();
+            } else {
+                throw new NotFoundException("Player with this id does not exist in this match score");
+            }
 
-            if (matchScoreService.isMatchFinished(uuid)) {
+            matchScoreCalculationService.pointWon(matchScoreModel, player);
+
+            if (matchScoreCalculationService.isMatchFinished(matchScoreModel)) {
 
                 matchFinishedProcessing(request, response, uuid);
             } else {
@@ -102,15 +164,24 @@ public class MatchScoreServlet extends HttpServlet {
 
     private void matchFinishedProcessing(HttpServletRequest request, HttpServletResponse response, UUID uuid) throws ServletException, IOException {
 
-        FinalScoreResponseDto finalScoreResponseDto = matchScoreService.getFinalScore(uuid);
+        OngoingMatchDto ongoingMatchDto = ongoingMatchService.get(uuid);
+        MatchScoreModel matchScoreModel = ongoingMatchDto.matchScoreModel();
 
-        matchScoreService.recordMatch(uuid);
+        finishedMatchesPersistenceService.recordMatch(ongoingMatchDto);
+        ongoingMatchService.delete(uuid);
 
-        request.setAttribute("player1Name", finalScoreResponseDto.player1FinalScoreResponseDto().name());
-        request.setAttribute("player1Score", finalScoreResponseDto.player1FinalScoreResponseDto().score());
+        request.setAttribute("player1Name", ongoingMatchDto.player1().getName());
+        request.setAttribute("player1Score", matchScoreModel
+                .getScore()
+                .stream()
+                .map(matchGame -> matchGame.getScore(ongoingMatchDto.player1()))
+                .toList());
 
-        request.setAttribute("player2Name", finalScoreResponseDto.player2FinalScoreResponseDto().name());
-        request.setAttribute("player2Score", finalScoreResponseDto.player2FinalScoreResponseDto().score());
+        request.setAttribute("player2Name", ongoingMatchDto.player2().getName());
+        request.setAttribute("player2Score", matchScoreModel.getScore()
+                .stream()
+                .map(matchGame -> matchGame.getScore(ongoingMatchDto.player2()))
+                .toList());
 
         request.getRequestDispatcher(FINAL_MATCH_SCORE_JSP).forward(request, response);
     }

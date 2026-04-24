@@ -2,8 +2,8 @@ package com.stubedavd.service;
 
 import com.stubedavd.entity.Player;
 import com.stubedavd.exception.BusinessException;
-import com.stubedavd.logic.MatchGame;
-import com.stubedavd.logic.MatchPoint;
+import com.stubedavd.model.MatchGame;
+import com.stubedavd.model.MatchPoint;
 import com.stubedavd.model.MatchScoreModel;
 
 public class MatchScoreCalculationService {
