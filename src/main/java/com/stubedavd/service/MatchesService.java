@@ -26,7 +26,7 @@ public class MatchesService {
         return matchRepository.findTotalCount();
     }
 
-    public Long getCountByName(String playerName) {
+    public Long getTotalCount(String playerName) {
 
         return matchRepository.findCountByName(playerName);
     }
@@ -44,7 +44,7 @@ public class MatchesService {
                 .toList();
     }
 
-    public List<MatchResponseDto> getByPlayerName(String playerName, int pageNumber, int pageSize) {
+    public List<MatchResponseDto> getPage(String playerName, int pageNumber, int pageSize) {
 
         return matchRepository
                 .findByPlayerName(playerName, pageNumber, pageSize)

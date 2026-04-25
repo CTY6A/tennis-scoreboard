@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @WebServlet("/matches")
 public class MatchesController extends HttpServlet {
@@ -42,44 +43,37 @@ public class MatchesController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        int pageNumber = PAGE_NUMBER_0;
-        String pageNumberString = request.getParameter("page");
-        pageNumber = getPageNumber(pageNumberString, pageNumber);
-
         List<MatchResponseDto> matches;
+        int pageNumber = getPageNumber(request);
         int pageCount;
         Long matchesCount;
+        Optional<String> playerNameOptional = getPlayerFilter(request);
 
-        String playerName = request.getParameter("filter_by_player_name");
-        if (playerName != null && !playerName.isBlank()) {
+        if (playerNameOptional.isPresent()) {
 
-            playerName = playerName.trim();
-            Validator.validatePlayerName(playerName);
-
-            matchesCount = matchesService.getCountByName(playerName);
-
-            pageCount = (int) ((matchesCount + PAGE_SIZE - 1) / PAGE_SIZE);
-
-            if (pageNumber > pageCount - 1 && pageCount != 0) {
-                pageNumber = pageCount - 1;
-            }
-
-            matches = matchesService.getByPlayerName(playerName, pageNumber, PAGE_SIZE);
+            matchesCount = matchesService.getTotalCount(playerNameOptional.get());
         } else {
 
             matchesCount = matchesService.getTotalCount();
+        }
 
-            pageCount = (int) ((matchesCount + PAGE_SIZE - 1) / PAGE_SIZE);
+        pageCount = (int) ((matchesCount + PAGE_SIZE - 1) / PAGE_SIZE);
 
-            if (pageNumber > pageCount - 1 && pageCount != 0) {
-                pageNumber = pageCount - 1;
-            }
+        if (pageNumber > pageCount - 1 && pageCount != 0) {
+
+            pageNumber = pageCount - 1;
+        }
+
+        if (playerNameOptional.isPresent()) {
+
+            matches = matchesService.getPage(playerNameOptional.get(), pageNumber, PAGE_SIZE);
+        } else {
 
             matches = matchesService.getPage(pageNumber, PAGE_SIZE);
         }
 
         request.setAttribute("matches", matches);
-        request.setAttribute("playerName", playerName);
+        request.setAttribute("playerName", playerNameOptional.orElse(""));
         request.setAttribute("pageCount", pageCount);
         request.setAttribute("pageNumber", pageNumber + 1 );
         request.setAttribute("matchesCount", matchesCount);
@@ -89,7 +83,10 @@ public class MatchesController extends HttpServlet {
         request.getRequestDispatcher(JSP).forward(request, response);
     }
 
-    private int getPageNumber(String pageNumberString, int pageNumber) {
+    private int getPageNumber(HttpServletRequest request) {
+
+        int pageNumber = PAGE_NUMBER_0;
+        String pageNumberString = request.getParameter("page");
 
         if (pageNumberString != null && !pageNumberString.isBlank()) {
 
@@ -103,6 +100,22 @@ public class MatchesController extends HttpServlet {
                 pageNumber = PAGE_NUMBER_0;
             }
         }
+
         return pageNumber;
+    }
+
+    private Optional<String> getPlayerFilter(HttpServletRequest request) {
+
+        String playerName = request.getParameter("filter_by_player_name");
+
+        if (playerName != null && !playerName.isBlank()) {
+
+            playerName = playerName.trim();
+            Validator.validatePlayerName(playerName);
+
+            return Optional.of(playerName);
+        }
+
+        return Optional.empty();
     }
 }
