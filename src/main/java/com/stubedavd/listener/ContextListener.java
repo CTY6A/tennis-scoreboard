@@ -1,10 +1,10 @@
 package com.stubedavd.listener;
 
-import com.stubedavd.mapper.MatchMapper;
-import com.stubedavd.mapper.PlayerMapper;
-import com.stubedavd.repository.MatchRepository;
-import com.stubedavd.repository.PlayerRepository;
-import com.stubedavd.service.*;
+import com.stubedavd.match.mapper.MatchMapper;
+import com.stubedavd.match.service.*;
+import com.stubedavd.player.mapper.PlayerMapper;
+import com.stubedavd.match.repository.MatchRepository;
+import com.stubedavd.player.repository.PlayerRepository;
 import com.stubedavd.util.HibernateUtil;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;

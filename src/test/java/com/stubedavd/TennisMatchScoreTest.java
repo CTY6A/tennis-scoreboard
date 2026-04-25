@@ -1,9 +1,9 @@
 package com.stubedavd;
 
-import com.stubedavd.entity.Player;
+import com.stubedavd.player.entity.Player;
 import com.stubedavd.exception.BusinessException;
-import com.stubedavd.model.MatchScoreModel;
-import com.stubedavd.service.MatchScoreCalculationService;
+import com.stubedavd.match.model.MatchScoreModel;
+import com.stubedavd.match.service.MatchScoreCalculationService;
 import org.junit.jupiter.api.*;
 
 public class TennisMatchScoreTest {

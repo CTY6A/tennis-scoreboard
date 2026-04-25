@@ -1,8 +1,8 @@
 package com.stubedavd;
 
-import com.stubedavd.entity.Player;
+import com.stubedavd.player.entity.Player;
 import com.stubedavd.exception.AlreadyExistException;
-import com.stubedavd.repository.PlayerRepository;
+import com.stubedavd.player.repository.PlayerRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
