@@ -1,4 +1,4 @@
-package com.stubedavd.servlet;
+package com.stubedavd.controller;
 
 import com.stubedavd.dto.request.PlayerRequestDto;
 import com.stubedavd.exception.NotFoundException;
@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @WebServlet("/new-match")
-public class NewMatchServlet extends HttpServlet {
+public class NewMatchController extends HttpServlet {
 
     public static final String JSP = "/WEB-INF/jsp/new-match.jsp";
 

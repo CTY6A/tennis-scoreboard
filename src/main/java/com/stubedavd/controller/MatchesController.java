@@ -1,4 +1,4 @@
-package com.stubedavd.servlet;
+package com.stubedavd.controller;
 
 import com.stubedavd.dto.response.MatchResponseDto;
 import com.stubedavd.exception.NotFoundException;
@@ -16,9 +16,10 @@ import java.io.IOException;
 import java.util.List;
 
 @WebServlet("/matches")
-public class MatchesServlet extends HttpServlet {
+public class MatchesController extends HttpServlet {
 
     public static final String JSP = "/WEB-INF/jsp/matches.jsp";
+
     public static final int PAGE_SIZE = 10;
     public static final int PAGE_NUMBER_0 = 0;
 
@@ -33,7 +34,6 @@ public class MatchesServlet extends HttpServlet {
                 (MatchesService) config.getServletContext().getAttribute(ContextListener.MATCHES_SERVICE);
 
         if (matchesService == null) {
-
             throw new NotFoundException("Matches service not found");
         }
     }
@@ -43,37 +43,17 @@ public class MatchesServlet extends HttpServlet {
             throws ServletException, IOException {
 
         int pageNumber = PAGE_NUMBER_0;
-
         String pageNumberString = request.getParameter("page");
-
-        if (pageNumberString != null && !pageNumberString.isBlank()) {
-
-            pageNumberString = pageNumberString.trim();
-
-            Validator.validatePageNumber(pageNumberString);
-
-            pageNumber = Integer.parseInt(pageNumberString);
-
-            pageNumber--;
-
-            if (pageNumber < PAGE_NUMBER_0) {
-
-                pageNumber = PAGE_NUMBER_0;
-            }
-
-        }
-
+        pageNumber = getPageNumber(pageNumberString, pageNumber);
 
         List<MatchResponseDto> matches;
         int pageCount;
         Long matchesCount;
 
         String playerName = request.getParameter("filter_by_player_name");
-
         if (playerName != null && !playerName.isBlank()) {
 
             playerName = playerName.trim();
-
             Validator.validatePlayerName(playerName);
 
             matchesCount = matchesService.getCountByName(playerName);
@@ -81,7 +61,6 @@ public class MatchesServlet extends HttpServlet {
             pageCount = (int) ((matchesCount + PAGE_SIZE - 1) / PAGE_SIZE);
 
             if (pageNumber > pageCount - 1 && pageCount != 0) {
-
                 pageNumber = pageCount - 1;
             }
 
@@ -93,7 +72,6 @@ public class MatchesServlet extends HttpServlet {
             pageCount = (int) ((matchesCount + PAGE_SIZE - 1) / PAGE_SIZE);
 
             if (pageNumber > pageCount - 1 && pageCount != 0) {
-
                 pageNumber = pageCount - 1;
             }
 
@@ -109,5 +87,22 @@ public class MatchesServlet extends HttpServlet {
         request.setAttribute("matchesTo", pageNumber * PAGE_SIZE + matches.size());
 
         request.getRequestDispatcher(JSP).forward(request, response);
+    }
+
+    private int getPageNumber(String pageNumberString, int pageNumber) {
+
+        if (pageNumberString != null && !pageNumberString.isBlank()) {
+
+            pageNumberString = pageNumberString.trim();
+            Validator.validatePageNumber(pageNumberString);
+            pageNumber = Integer.parseInt(pageNumberString);
+
+            pageNumber--;
+
+            if (pageNumber < PAGE_NUMBER_0) {
+                pageNumber = PAGE_NUMBER_0;
+            }
+        }
+        return pageNumber;
     }
 }

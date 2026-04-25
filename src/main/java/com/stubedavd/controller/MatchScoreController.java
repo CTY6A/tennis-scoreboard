@@ -1,4 +1,4 @@
-package com.stubedavd.servlet;
+package com.stubedavd.controller;
 
 import com.stubedavd.dto.OngoingMatchDto;
 import com.stubedavd.entity.Player;
@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @WebServlet("/match-score")
-public class MatchScoreServlet extends HttpServlet {
+public class MatchScoreController extends HttpServlet {
 
     public static final String MATCH_SCORE_JSP = "/WEB-INF/jsp/match-score.jsp";
     public static final String FINAL_MATCH_SCORE_JSP = "/WEB-INF/jsp/final-match-score.jsp";
@@ -64,46 +64,22 @@ public class MatchScoreServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String uuidString = request.getParameter("uuid");
-        Validator.validateUuid(uuidString);
-        UUID uuid = UUID.fromString(uuidString);
+        UUID uuid = getUuid(request);
+
         OngoingMatchDto ongoingMatchDto = ongoingMatchService.get(uuid);
         MatchScoreModel matchScoreModel = ongoingMatchDto.matchScoreModel();
 
-        String player1PointsString;
-        String player2PointsString;
+        String player1PointsString = getPointsString(
+                matchScoreModel,
+                ongoingMatchDto.player1(),
+                ongoingMatchDto.player2()
+        );
 
-        int player1Points = matchScoreModel.getPoints().getScore(ongoingMatchDto.player1());
-        int player2Points = matchScoreModel.getPoints().getScore(ongoingMatchDto.player2());
-
-        if (player1Points >= 4 || player2Points >= 4) {
-
-            player1PointsString = "40";
-            player2PointsString = "40";
-
-            if (player1Points > player2Points) {
-
-                player1PointsString = "AD";
-            } else if (player2Points > player1Points) {
-
-                player2PointsString = "AD";
-            }
-        } else {
-
-            player1PointsString = switch (player1Points) {
-                case 1 -> "15";
-                case 2 -> "30";
-                case 3 -> "40";
-                default -> "0";
-            };
-
-            player2PointsString = switch (player2Points) {
-                case 1 -> "15";
-                case 2 -> "30";
-                case 3 -> "40";
-                default -> "0";
-            };
-        }
+        String player2PointsString = getPointsString(
+                matchScoreModel,
+                ongoingMatchDto.player2(),
+                ongoingMatchDto.player1()
+        );
 
         request.setAttribute("player1Id", ongoingMatchDto.player1().getId());
         request.setAttribute("player1Name", ongoingMatchDto.player1().getName());
@@ -122,13 +98,44 @@ public class MatchScoreServlet extends HttpServlet {
         request.getRequestDispatcher(MATCH_SCORE_JSP).forward(request, response);
     }
 
+    private String getPointsString(MatchScoreModel matchScoreModel, Player player1, Player player2) {
+
+        int player1Points = matchScoreModel.getPoints().getScore(player1);
+        int player2Points = matchScoreModel.getPoints().getScore(player2);
+
+        if (player1Points >= 4 || player2Points >= 4) {
+
+            if (player1Points > player2Points) {
+
+                return "AD";
+            } else {
+
+                return "40";
+            }
+        } else {
+
+            return switch (player1Points) {
+                case 1 -> "15";
+                case 2 -> "30";
+                case 3 -> "40";
+                default -> "0";
+            };
+        }
+    }
+
+    private UUID getUuid(HttpServletRequest request) {
+
+        String uuidString = request.getParameter("uuid");
+        Validator.validateUuid(uuidString);
+        return UUID.fromString(uuidString);
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
 
-        String uuidString = request.getParameter("uuid");
-        Validator.validateUuid(uuidString);
-        UUID uuid = UUID.fromString(uuidString);
+        UUID uuid = getUuid(request);
+
         OngoingMatchDto ongoingMatchDto = ongoingMatchService.get(uuid);
         MatchScoreModel matchScoreModel = ongoingMatchDto.matchScoreModel();
 
@@ -137,18 +144,7 @@ public class MatchScoreServlet extends HttpServlet {
             matchFinishedProcessing(request, response, uuid);
         } else {
 
-            String playerIdString = request.getParameter("playerId");
-            Validator.validatePlayerId(playerIdString);
-            Integer playerId = Integer.parseInt(playerIdString);
-
-            Player player;
-            if (playerId.equals(ongoingMatchDto.player1().getId())) {
-                player = ongoingMatchDto.player1();
-            } else if (playerId.equals(ongoingMatchDto.player2().getId())) {
-                player = ongoingMatchDto.player2();
-            } else {
-                throw new NotFoundException("Player with this id does not exist in this match score");
-            }
+            Player player = getPlayer(request, ongoingMatchDto);
 
             matchScoreCalculationService.pointWon(matchScoreModel, player);
 
@@ -157,12 +153,30 @@ public class MatchScoreServlet extends HttpServlet {
                 matchFinishedProcessing(request, response, uuid);
             } else {
 
-                response.sendRedirect(request.getContextPath() + "/match-score?uuid=" + uuidString);
+                response.sendRedirect(request.getContextPath() + "/match-score?uuid=" + uuid);
             }
         }
     }
 
-    private void matchFinishedProcessing(HttpServletRequest request, HttpServletResponse response, UUID uuid) throws ServletException, IOException {
+    private Player getPlayer(HttpServletRequest request, OngoingMatchDto ongoingMatchDto) {
+
+        String playerIdString = request.getParameter("playerId");
+        Validator.validatePlayerId(playerIdString);
+        Integer playerId = Integer.parseInt(playerIdString);
+
+        if (playerId.equals(ongoingMatchDto.player1().getId())) {
+            return ongoingMatchDto.player1();
+        }
+
+        if (playerId.equals(ongoingMatchDto.player2().getId())) {
+            return ongoingMatchDto.player2();
+        }
+
+        throw new NotFoundException("Player with this id does not exist in this match score");
+    }
+
+    private void matchFinishedProcessing(HttpServletRequest request, HttpServletResponse response, UUID uuid)
+            throws ServletException, IOException {
 
         OngoingMatchDto ongoingMatchDto = ongoingMatchService.get(uuid);
         MatchScoreModel matchScoreModel = ongoingMatchDto.matchScoreModel();
