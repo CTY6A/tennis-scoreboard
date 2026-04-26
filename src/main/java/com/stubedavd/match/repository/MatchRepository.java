@@ -16,7 +16,7 @@ import java.util.List;
 
 public class MatchRepository {
 
-    SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
 
     public MatchRepository() {
 

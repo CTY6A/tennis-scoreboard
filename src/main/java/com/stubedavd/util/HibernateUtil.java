@@ -10,9 +10,7 @@ public final class HibernateUtil {
 
     private static SessionFactory sessionFactory;
 
-    private HibernateUtil() {
-
-    }
+    private HibernateUtil() {}
 
     public static void init() {
 

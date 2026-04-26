@@ -10,7 +10,6 @@ import org.junit.jupiter.api.*;
 public class TennisMatchScoreTest {
 
     private MatchScoreCalculationService matchScoreCalculationService;
-    private MatchScoreModelMapper matchScoreModelMapper;
     private MatchScoreModel matchScoreModel;
     private Player player1;
     private Player player2;
@@ -19,7 +18,7 @@ public class TennisMatchScoreTest {
     void setUpBeforeClass() {
 
         matchScoreCalculationService = new MatchScoreCalculationService();
-        matchScoreModelMapper = MatchScoreModelMapper.INSTANCE;
+        MatchScoreModelMapper matchScoreModelMapper = MatchScoreModelMapper.INSTANCE;
 
         player1 = new Player();
         player1.setName("Nadal");

@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public class PlayerRepository {
 
-    SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
 
     public PlayerRepository() {
 
