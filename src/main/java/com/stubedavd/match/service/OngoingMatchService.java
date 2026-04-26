@@ -1,6 +1,5 @@
 package com.stubedavd.match.service;
 
-import com.stubedavd.player.entity.Player;
 import com.stubedavd.match.model.MatchScoreModel;
 import com.stubedavd.exception.NotFoundException;
 
@@ -17,11 +16,9 @@ public class OngoingMatchService {
         this.ongoingMatches = new HashMap<>();
     }
 
-    public UUID save(Player player1, Player player2) {
+    public UUID save(MatchScoreModel matchScoreModel) {
 
         UUID uuid = UUID.randomUUID();
-
-        MatchScoreModel matchScoreModel = new MatchScoreModel(player1, player2);
 
         ongoingMatches.put(uuid, matchScoreModel);
 

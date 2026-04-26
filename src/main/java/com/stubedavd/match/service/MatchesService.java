@@ -8,9 +8,9 @@ import java.util.List;
 
 public class MatchesService {
 
-    MatchMapper matchMapper;
+    private final MatchMapper matchMapper;
 
-    MatchRepository matchRepository;
+    private final MatchRepository matchRepository;
 
     public MatchesService(
             MatchMapper matchMapper,

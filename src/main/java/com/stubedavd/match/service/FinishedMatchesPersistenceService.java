@@ -7,9 +7,9 @@ import com.stubedavd.match.repository.MatchRepository;
 
 public class FinishedMatchesPersistenceService {
 
-    MatchMapper matchMapper;
+    private final MatchMapper matchMapper;
 
-    MatchRepository matchRepository;
+    private final MatchRepository matchRepository;
 
     public FinishedMatchesPersistenceService(
             MatchMapper matchMapper,

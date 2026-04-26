@@ -1,5 +1,6 @@
 package com.stubedavd;
 
+import com.stubedavd.match.mapper.MatchScoreModelMapper;
 import com.stubedavd.player.entity.Player;
 import com.stubedavd.exception.BusinessException;
 import com.stubedavd.match.model.MatchScoreModel;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.*;
 public class TennisMatchScoreTest {
 
     private MatchScoreCalculationService matchScoreCalculationService;
+    private MatchScoreModelMapper matchScoreModelMapper;
     private MatchScoreModel matchScoreModel;
     private Player player1;
     private Player player2;
@@ -17,6 +19,7 @@ public class TennisMatchScoreTest {
     void setUpBeforeClass() {
 
         matchScoreCalculationService = new MatchScoreCalculationService();
+        matchScoreModelMapper = MatchScoreModelMapper.INSTANCE;
 
         player1 = new Player();
         player1.setName("Nadal");
@@ -24,7 +27,7 @@ public class TennisMatchScoreTest {
         player2 = new Player();
         player2.setName("Nadal");
 
-        matchScoreModel = new MatchScoreModel(player1, player2);
+        matchScoreModel = matchScoreModelMapper.toModel(player1, player2);
     }
 
     @Test

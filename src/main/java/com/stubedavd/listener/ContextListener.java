@@ -1,6 +1,7 @@
 package com.stubedavd.listener;
 
 import com.stubedavd.match.mapper.MatchMapper;
+import com.stubedavd.match.mapper.MatchScoreModelMapper;
 import com.stubedavd.match.service.*;
 import com.stubedavd.player.mapper.PlayerMapper;
 import com.stubedavd.match.repository.MatchRepository;
@@ -35,12 +36,18 @@ public class ContextListener implements ServletContextListener {
 
         PlayerMapper playerMapper = PlayerMapper.INSTANCE;
         MatchMapper matchMapper = MatchMapper.INSTANCE;
+        MatchScoreModelMapper matchScoreModelMapper = MatchScoreModelMapper.INSTANCE;
 
         PlayerRepository playerRepository = new PlayerRepository();
         MatchRepository matchRepository = new MatchRepository();
 
         OngoingMatchService ongoingMatchService = new OngoingMatchService();
-        NewMatchService newMatchService = new NewMatchService(ongoingMatchService, playerMapper, playerRepository);
+        NewMatchService newMatchService = new NewMatchService(
+                ongoingMatchService,
+                playerMapper,
+                matchScoreModelMapper,
+                playerRepository
+        );
         MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService();
         MatchesService matchesService = new MatchesService(matchMapper, matchRepository);
         FinishedMatchesPersistenceService finishedMatchesPersistenceService =

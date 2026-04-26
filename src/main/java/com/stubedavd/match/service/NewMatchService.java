@@ -1,5 +1,7 @@
 package com.stubedavd.match.service;
 
+import com.stubedavd.match.mapper.MatchScoreModelMapper;
+import com.stubedavd.match.model.MatchScoreModel;
 import com.stubedavd.player.dto.request.PlayerRequestDto;
 import com.stubedavd.player.entity.Player;
 import com.stubedavd.player.mapper.PlayerMapper;
@@ -9,20 +11,23 @@ import java.util.UUID;
 
 public class NewMatchService {
 
-    OngoingMatchService ongoingMatchService;
+    private final OngoingMatchService ongoingMatchService;
 
-    PlayerMapper playerMapper;
+    private final PlayerMapper playerMapper;
+    private final MatchScoreModelMapper matchScoreModelMapper;
 
-    PlayerRepository playerRepository;
+    private final PlayerRepository playerRepository;
 
     public NewMatchService(
             OngoingMatchService ongoingMatchService,
             PlayerMapper playerMapper,
+            MatchScoreModelMapper matchScoreModelMapper,
             PlayerRepository playerRepository
     ) {
 
         this.ongoingMatchService = ongoingMatchService;
         this.playerMapper = playerMapper;
+        this.matchScoreModelMapper = matchScoreModelMapper;
         this.playerRepository = playerRepository;
     }
 
@@ -34,6 +39,8 @@ public class NewMatchService {
         Player player2 = playerRepository.findByName(playerRequestDto2.name())
                 .orElseGet(() -> playerRepository.save(playerMapper.toModel(playerRequestDto2)));
 
-        return ongoingMatchService.save(player1, player2);
+        MatchScoreModel matchScoreModel = matchScoreModelMapper.toModel(player1, player2);
+
+        return ongoingMatchService.save(matchScoreModel);
     }
 }
