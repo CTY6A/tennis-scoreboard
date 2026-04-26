@@ -23,7 +23,7 @@ public class MatchRepository {
         sessionFactory = HibernateUtil.getSessionFactory();
     }
 
-    public Long findTotalCount() {
+    public long findTotalCount() {
 
         try (Session session = sessionFactory.openSession()) {
 
@@ -37,7 +37,7 @@ public class MatchRepository {
         }
     }
 
-    public Long findCountByName(String playerName) {
+    public long findCountByName(String playerName) {
 
         try (Session session = sessionFactory.openSession()) {
 

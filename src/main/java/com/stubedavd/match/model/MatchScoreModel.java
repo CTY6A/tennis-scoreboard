@@ -24,7 +24,7 @@ public class MatchScoreModel {
 
     private final List<MatchGame> score;
 
-    private Boolean matchFinished;
+    private boolean matchFinished;
 
     public MatchScoreModel(Player player1, Player player2) {
 

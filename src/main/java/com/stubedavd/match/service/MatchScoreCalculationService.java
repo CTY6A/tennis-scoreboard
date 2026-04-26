@@ -8,9 +8,9 @@ import com.stubedavd.match.model.MatchScoreModel;
 
 public class MatchScoreCalculationService {
 
-    public Boolean isMatchFinished(MatchScoreModel matchScoreModel) {
+    public boolean isMatchFinished(MatchScoreModel matchScoreModel) {
 
-        return matchScoreModel.getMatchFinished();
+        return matchScoreModel.isMatchFinished();
     }
 
     public void pointWon(MatchScoreModel matchScoreModel, Player player) {
@@ -85,31 +85,31 @@ public class MatchScoreCalculationService {
         }
     }
 
-    private Boolean isTieBreak(MatchScoreModel matchScoreModel) {
+    private boolean isTieBreak(MatchScoreModel matchScoreModel) {
         return matchScoreModel.getPoints().isTieBreak();
     }
 
-    private Boolean isGameWon(MatchScoreModel matchScoreModel, Player player) {
+    private boolean isGameWon(MatchScoreModel matchScoreModel, Player player) {
 
         return matchScoreModel.getPoints().isRoundWon(player);
     }
 
-    private Boolean isSetWon(MatchScoreModel matchScoreModel, Player player) {
+    private boolean isSetWon(MatchScoreModel matchScoreModel, Player player) {
 
         return matchScoreModel.getGames().isRoundWon(player);
     }
 
-    private Boolean isMatchWon(MatchScoreModel matchScoreModel, Player player) {
+    private boolean isMatchWon(MatchScoreModel matchScoreModel, Player player) {
 
         return matchScoreModel.getSets().isRoundWon(player);
     }
 
-    private Boolean isTieBreakWon(MatchScoreModel matchScoreModel, Player player) {
+    private boolean isTieBreakWon(MatchScoreModel matchScoreModel, Player player) {
 
         return matchScoreModel.getPoints().isRoundWon(player);
     }
 
-    private Boolean checkTieBreak(MatchScoreModel matchScoreModel) {
+    private boolean checkTieBreak(MatchScoreModel matchScoreModel) {
 
         return matchScoreModel.getGames().checkTieBreak();
     }

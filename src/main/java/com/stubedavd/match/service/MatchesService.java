@@ -21,12 +21,12 @@ public class MatchesService {
         this.matchRepository = matchRepository;
     }
 
-    public Long getTotalCount() {
+    public long getTotalCount() {
 
         return matchRepository.findTotalCount();
     }
 
-    public Long getTotalCount(String playerName) {
+    public long getTotalCount(String playerName) {
 
         return matchRepository.findCountByName(playerName);
     }

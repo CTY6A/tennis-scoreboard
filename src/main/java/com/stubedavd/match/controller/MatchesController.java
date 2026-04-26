@@ -44,33 +44,26 @@ public class MatchesController extends HttpServlet {
             throws ServletException, IOException {
 
         List<MatchResponseDto> matches;
-        int pageNumber = getPageNumber(request);
-        int pageCount;
-        Long matchesCount;
+        long pageNumber = getPageNumber(request);
+        long pageCount;
+        long matchesCount;
         Optional<String> playerNameOptional = getPlayerFilter(request);
 
-        if (playerNameOptional.isPresent()) {
+        matchesCount = playerNameOptional
+                .map(playerNameFilter -> matchesService.getTotalCount(playerNameFilter))
+                .orElseGet(() -> matchesService.getTotalCount());
 
-            matchesCount = matchesService.getTotalCount(playerNameOptional.get());
-        } else {
-
-            matchesCount = matchesService.getTotalCount();
-        }
-
-        pageCount = (int) ((matchesCount + PAGE_SIZE - 1) / PAGE_SIZE);
+        pageCount = (matchesCount + PAGE_SIZE - 1) / PAGE_SIZE;
 
         if (pageNumber > pageCount - 1 && pageCount != 0) {
 
             pageNumber = pageCount - 1;
         }
 
-        if (playerNameOptional.isPresent()) {
-
-            matches = matchesService.getPage(playerNameOptional.get(), pageNumber, PAGE_SIZE);
-        } else {
-
-            matches = matchesService.getPage(pageNumber, PAGE_SIZE);
-        }
+        int finalPageNumber = (int) pageNumber;
+        matches = playerNameOptional
+                .map(playerNameFilter -> matchesService.getPage(playerNameFilter, finalPageNumber, PAGE_SIZE))
+                .orElseGet(() -> matchesService.getPage(finalPageNumber, PAGE_SIZE));
 
         request.setAttribute("matches", matches);
         request.setAttribute("playerName", playerNameOptional.orElse(""));
