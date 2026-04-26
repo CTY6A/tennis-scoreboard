@@ -1,35 +1,31 @@
 package com.stubedavd.match.service;
 
-import com.stubedavd.match.dto.OngoingMatchDto;
 import com.stubedavd.match.entity.Match;
 import com.stubedavd.match.mapper.MatchMapper;
+import com.stubedavd.match.model.MatchScoreModel;
 import com.stubedavd.match.repository.MatchRepository;
 
 public class FinishedMatchesPersistenceService {
-
-    OngoingMatchService ongoingMatchService;
 
     MatchMapper matchMapper;
 
     MatchRepository matchRepository;
 
     public FinishedMatchesPersistenceService(
-            OngoingMatchService ongoingMatchService,
             MatchMapper matchMapper,
             MatchRepository matchRepository
     ) {
 
-        this.ongoingMatchService = ongoingMatchService;
         this.matchMapper = matchMapper;
         this.matchRepository = matchRepository;
     }
 
-    public void recordMatch(OngoingMatchDto ongoingMatchDto) {
+    public void recordMatch(MatchScoreModel matchScoreModel) {
 
         Match match = matchMapper.toModel(
-                ongoingMatchDto.player1(),
-                ongoingMatchDto.player2(),
-                ongoingMatchDto.matchScoreModel().getWinner()
+                matchScoreModel.getPlayer1(),
+                matchScoreModel.getPlayer2(),
+                matchScoreModel.getWinner()
         );
 
         matchRepository.save(match);

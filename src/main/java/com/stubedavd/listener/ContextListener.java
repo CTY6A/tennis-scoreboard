@@ -44,7 +44,7 @@ public class ContextListener implements ServletContextListener {
         MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService();
         MatchesService matchesService = new MatchesService(matchMapper, matchRepository);
         FinishedMatchesPersistenceService finishedMatchesPersistenceService =
-                new FinishedMatchesPersistenceService(ongoingMatchService, matchMapper, matchRepository);
+                new FinishedMatchesPersistenceService(matchMapper, matchRepository);
 
         servletContext.setAttribute(PLAYER_REPOSITORY, playerRepository);
         servletContext.setAttribute(MATCH_REPOSITORY, matchRepository);

@@ -1,6 +1,5 @@
 package com.stubedavd.match.service;
 
-import com.stubedavd.match.dto.OngoingMatchDto;
 import com.stubedavd.player.entity.Player;
 import com.stubedavd.match.model.MatchScoreModel;
 import com.stubedavd.exception.NotFoundException;
@@ -11,7 +10,7 @@ import java.util.UUID;
 
 public class OngoingMatchService {
 
-    private final Map<UUID, OngoingMatchDto> ongoingMatches;
+    private final Map<UUID, MatchScoreModel> ongoingMatches;
 
     public OngoingMatchService() {
 
@@ -24,23 +23,21 @@ public class OngoingMatchService {
 
         MatchScoreModel matchScoreModel = new MatchScoreModel(player1, player2);
 
-        OngoingMatchDto ongoingMatchDto = new OngoingMatchDto(player1, player2, matchScoreModel);
-
-        ongoingMatches.put(uuid, ongoingMatchDto);
+        ongoingMatches.put(uuid, matchScoreModel);
 
         return uuid;
     }
 
-    public OngoingMatchDto get(UUID uuid) {
+    public MatchScoreModel get(UUID uuid) {
 
-        OngoingMatchDto ongoingMatchDto = ongoingMatches.get(uuid);
+        MatchScoreModel matchScoreModel = ongoingMatches.get(uuid);
 
-        if (ongoingMatchDto == null) {
+        if (matchScoreModel == null) {
 
             throw new NotFoundException("Match not found");
         }
 
-        return ongoingMatchDto;
+        return matchScoreModel;
     }
 
     public void delete(UUID uuid) {
