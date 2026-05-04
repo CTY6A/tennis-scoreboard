@@ -7,10 +7,13 @@ import com.stubedavd.match.repository.MatchRepository;
 
 public class FinishedMatchesPersistenceService {
 
+    // TODO: Нет интерфейса для этого класса. (см. файл "service.md" в этом же пакете)
+
     private final MatchMapper matchMapper;
 
     private final MatchRepository matchRepository;
 
+    // можно использовать @RequiredArgsConstructor над классом вместо самописного конструктора
     public FinishedMatchesPersistenceService(
             MatchMapper matchMapper,
             MatchRepository matchRepository

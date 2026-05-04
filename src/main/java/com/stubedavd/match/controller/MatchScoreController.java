@@ -21,6 +21,20 @@ import java.util.UUID;
 @WebServlet("/match-score")
 public class MatchScoreController extends HttpServlet {
 
+    // Все повторяющиеся или важные строковые литералы лучше вынести в `private static final` константы с понятными именами.
+        // Именованная константа делает код более семантически понятным.
+
+    // TODO: Сервлет берёт на себя лишнюю ответственность — оркестрирует взаимодействие между несколькими сервисами и содержит бизнес-логику,
+        // хотя его задача — только принимать HTTP-запросы и делегировать их обработку. Это нарушает принцип единственной ответственности (SRP)
+        // и делает код сервлета более сложным и трудным для тестирования.
+        // Сервлет должен быть "тонким контроллером", делегирующим всю бизнес-логику одному фасадному сервису.
+        // (см. файл "Архитектурный анти-паттерн: "Толстый контроллер" (Fat Controller).md" в этом же пакете)
+
+    // TODO: Сервлет работает с доменной моделью `MatchScoreModel` и получает из неё JPA Entity игроков (`Player`).
+        // Это нарушает границы между слоями приложения и Принцип разделения ответственности
+        // (см. файл "Принцип разделения ответственности (Separation of Concerns).md" в этом же пакете).
+        // Сервлет не должен работать с доменными моделями и JPA сущностями и знать о существовании класса `Player` — ему это не нужно для выполнения его задачи.
+
     public static final String MATCH_SCORE_JSP = "/WEB-INF/jsp/match-score.jsp";
     public static final String FINAL_MATCH_SCORE_JSP = "/WEB-INF/jsp/final-match-score.jsp";
 
@@ -28,6 +42,8 @@ public class MatchScoreController extends HttpServlet {
     private MatchScoreCalculationService matchScoreCalculationService;
     private FinishedMatchesPersistenceService finishedMatchesPersistenceService;
 
+    // Для получения объектов из контекста можно использовать "естественные константы" — Service.class.getSimpleName() или Service.class.getName()
+    // Логику получения бина и проверку его на null можно вынести в базовый контроллер в специальный метод, чтобы она не повторялась по нескольку раз в каждом сервлете.
     @Override
     public void init(ServletConfig config) throws ServletException {
 
@@ -65,6 +81,7 @@ public class MatchScoreController extends HttpServlet {
 
         UUID uuid = getUuid(request);
 
+        // Сервлет не должен работать с доменной моделью (особенно которая содержит JPA Entity)
         MatchScoreModel matchScoreModel = ongoingMatchService.get(uuid);
 
         String player1PointsString = getPointsString(
@@ -79,12 +96,14 @@ public class MatchScoreController extends HttpServlet {
                 matchScoreModel.getPlayer1()
         );
 
+        // Вместо передачи данных во View по частям, лучше создать специальный DTO
         request.setAttribute("player1Id", matchScoreModel.getPlayer1().getId());
         request.setAttribute("player1Name", matchScoreModel.getPlayer1().getName());
         request.setAttribute("player1Sets", matchScoreModel.getSets().getScore(matchScoreModel.getPlayer1()));
         request.setAttribute("player1Games", matchScoreModel.getGames().getScore(matchScoreModel.getPlayer1()));
         request.setAttribute("player1Points", player1PointsString);
 
+        // Вместо передачи данных во View по частям, лучше создать специальный DTO
         request.setAttribute("player2Id", matchScoreModel.getPlayer2().getId());
         request.setAttribute("player2Name", matchScoreModel.getPlayer2().getName());
         request.setAttribute("player2Sets", matchScoreModel.getSets().getScore(matchScoreModel.getPlayer2()));
@@ -96,9 +115,16 @@ public class MatchScoreController extends HttpServlet {
         request.getRequestDispatcher(MATCH_SCORE_JSP).forward(request, response);
     }
 
+    // Ответственность за подготовку счёта для отображения лучше вынести в специальный класс-маппер.
+        // Соблюдение SRP в сервлете будет строже, если он не будет этим заниматься.
     private String getPointsString(MatchScoreModel matchScoreModel, Player player1, Player player2) {
 
         int player1Points = matchScoreModel.getPoints().getScore(player1);
+
+        if (matchScoreModel.getPoints().isTieBreak()) {
+            return String.valueOf(player1Points);
+        }
+
         int player2Points = matchScoreModel.getPoints().getScore(player2);
 
         if (player1Points >= 4 || player2Points >= 4) {
@@ -116,7 +142,7 @@ public class MatchScoreController extends HttpServlet {
                 case 1 -> "15";
                 case 2 -> "30";
                 case 3 -> "40";
-                default -> "0";
+                default -> "0"; // По умолчанию не должен возвращаться 0. Здесь лучше выбрасывать исключение.
             };
         }
     }
@@ -134,6 +160,7 @@ public class MatchScoreController extends HttpServlet {
 
         UUID uuid = getUuid(request);
 
+        // Сервлет не должен работать с доменной моделью (особенно которая содержит JPA Entity)
         MatchScoreModel matchScoreModel = ongoingMatchService.get(uuid);
 
         if (matchScoreCalculationService.isMatchFinished(matchScoreModel)) {
@@ -141,6 +168,7 @@ public class MatchScoreController extends HttpServlet {
             matchFinishedProcessing(request, response, uuid);
         } else {
 
+            // Сервлет не должен работать с JPA Entity
             Player player = getPlayer(request, matchScoreModel);
 
             matchScoreCalculationService.pointWon(matchScoreModel, player);
@@ -155,9 +183,12 @@ public class MatchScoreController extends HttpServlet {
         }
     }
 
+    // Сервлет не должен работать с JPA Entity
     private Player getPlayer(HttpServletRequest request, MatchScoreModel matchScoreModel) {
 
         String playerIdString = request.getParameter("playerId");
+
+        // Validator лучше внедрять через метод init(), а не обращать к нему напрямую из этого метода
         Validator.validatePlayerId(playerIdString);
         Integer playerId = Integer.parseInt(playerIdString);
 
@@ -172,6 +203,7 @@ public class MatchScoreController extends HttpServlet {
         throw new NotFoundException("Player with this id does not exist in this match score");
     }
 
+    // Сервлет не должен заниматься бизнес-логикой. Это обязанность сервисного слоя.
     private void matchFinishedProcessing(HttpServletRequest request, HttpServletResponse response, UUID uuid)
             throws ServletException, IOException {
 

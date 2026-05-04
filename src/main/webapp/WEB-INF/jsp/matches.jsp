@@ -35,8 +35,13 @@
         <div class="input-container">
             <input class="input-filter" placeholder="Filter by name" type="text" name="playerNameFilter" id="playerNameFilter" value="${playerName}"/>
             <div>
+                <a onclick="resetFilterAndSendGet(1)">
+                    <button class="btn-filter">Reset Filter</button>
+                </a>
+            </div>
+            <div>
                 <a onclick="sendGet(1)">
-                    <button class="btn-filter">Use Filter</button>
+                    <button class="btn-filter">Apply Filter</button>
                 </a>
             </div>
         </div>
@@ -50,6 +55,11 @@
             function sendGet(page) {
                 document.getElementById('page').value = page;
                 document.getElementById('filter_by_player_name').value = document.getElementById('playerNameFilter').value;
+                document.getElementById('getForm').submit();
+            }
+            function resetFilterAndSendGet(page) {
+                document.getElementById('page').value = page;
+                document.getElementById('filter_by_player_name').value = "";
                 document.getElementById('getForm').submit();
             }
         </script>
@@ -71,11 +81,12 @@
 
         <div class="pagination">
             <a class="prev" onclick="sendGet(${pageNumber} - 1)"> < </a>
-            <a class="num-page <c:if test="${1 == pageNumber}"> current</c:if>" onclick="sendGet(${1})">1</a>
-            <c:forEach begin="2" end="${pageCount}" varStatus="loop">
-                <a class="num-page
-                   <c:if test="${loop.index == pageNumber}"> current</c:if>"
-                   onclick="sendGet(${loop.index})">${loop.index}</a>
+            <c:forEach begin="${(pageNumber > 2) ? pageNumber - 2 : 1}" end="${pageNumber + 2}" varStatus="loop">
+                <c:if test="${(loop.index > 0) && (loop.index <= pageCount)}">
+                    <a class="num-page
+                    <c:if test="${loop.index == pageNumber}"> current</c:if>"
+                        onclick="sendGet(${loop.index})">${loop.index}</a>
+                </c:if>
             </c:forEach>
             <a class="next" onclick="sendGet(${pageNumber} + 1)"> > </a>
             <p> ${matchesFrom}-${matchesTo} of ${matchesCount}</p>

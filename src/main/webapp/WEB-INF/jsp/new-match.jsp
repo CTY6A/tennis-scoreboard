@@ -36,9 +36,9 @@
                 <form method="post" action="${pageContext.request.contextPath}/new-match">
                     <p style="color: red;">${errorMessage}</p>
                     <label class="label-player" for="playerOne">Player one</label>
-                    <input class="input-player" name="player1" placeholder="Name" type="text" required title="Enter a name">
+                    <input class="input-player" name="player1Name" value="${player1Name}" placeholder="Name" type="text" required title="Enter a name">
                     <label class="label-player" for="playerTwo">Player two</label>
-                    <input class="input-player" name="player2" placeholder="Name" type="text" required title="Enter a name">
+                    <input class="input-player" name="player2Name" value="${player2Name}" placeholder="Name" type="text" required title="Enter a name">
                     <input class="form-button" type="submit" value="Start">
                 </form>
             </div>

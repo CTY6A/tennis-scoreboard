@@ -7,6 +7,19 @@ import java.util.UUID;
 
 public final class Validator {
 
+    // Регулярные выражения трудно читать и понимать, особенно когда они смешаны с Java-кодом. Их смысл не всегда очевиден.
+        //
+        // Также метод `String.matches()` при каждом вызове заново компилирует регулярное выражение. Это приводит к небольшим, но лишним затратам производительности.
+        //
+        // Стоит вынести каждое регулярное выражение в `private static final` константу типа `Pattern`.
+        // Объект `Pattern` является скомпилированным представлением регулярного выражения и может быть переиспользован.
+
+    // Имеет смысл добавить разумные ограничения на длину имени (которые будут согласованы с параметром length в аннотации @Column в классе Player).
+
+    // У утилитного класса конструктор без аргументов должен быть private. Также можно использовать @UtilityClass из Lombok.
+
+    // Вместо общего "Player name is invalid", лучше сообщать, что именно нарушено или наоборот что ожидается от имени, которое не прошло валидацию.
+
     public static void validatePlayers(String playerName1, String playerName2) {
 
         if (playerName1 == null || playerName2 == null) {
@@ -18,11 +31,23 @@ public final class Validator {
         }
 
         if (!playerName1.trim().matches("^[A-Za-z]+(?:[-\\s][A-Za-z]+)*$")) {
-            throw new ValidationException("Invalid player name 1");
+            throw new ValidationException(
+                    "Player 1 name should contain only Latin letters, hyphen \"-\", and whitespace"
+            );
         }
 
         if (!playerName2.trim().matches("^[A-Za-z]+(?:[-\\s][A-Za-z]+)*$")) {
-            throw new ValidationException("Invalid player name 2");
+            throw new ValidationException(
+                    "Player 2 name should contain only Latin letters, hyphen \"-\", and whitespace"
+            );
+        }
+
+        if (playerName1.length() > 20) {
+            throw new ValidationException("Player 1 name is too long");
+        }
+
+        if (playerName2.length() > 20) {
+            throw new ValidationException("Player 2 name is too long");
         }
     }
 

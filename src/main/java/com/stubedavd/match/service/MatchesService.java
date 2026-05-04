@@ -8,10 +8,13 @@ import java.util.List;
 
 public class MatchesService {
 
+    // TODO: Нет интерфейса для этого класса. (см. файл "service.md" в этом же пакете)
+
     private final MatchMapper matchMapper;
 
     private final MatchRepository matchRepository;
 
+    // можно использовать @RequiredArgsConstructor над классом вместо самописного конструктора
     public MatchesService(
             MatchMapper matchMapper,
             MatchRepository matchRepository
@@ -36,6 +39,8 @@ public class MatchesService {
         return matchRepository
                 .findPage(pageNumber, pageSize)
                 .stream()
+
+                // Метод, принимающий List<Match> и возвращающий List<MatchResponseDto> можно добавить в MatchMapper и перенести эту логику в него.
                 .map(match -> matchMapper.toResponseDto(
                         match.getPlayer1().getName(),
                         match.getPlayer2().getName(),
@@ -49,6 +54,8 @@ public class MatchesService {
         return matchRepository
                 .findByPlayerName(playerName, pageNumber, pageSize)
                 .stream()
+
+                // Метод, принимающий List<Match> и возвращающий List<MatchResponseDto> можно добавить в MatchMapper и перенести эту логику в него.
                 .map(match -> matchMapper.toResponseDto(
                         match.getPlayer1().getName(),
                         match.getPlayer2().getName(),

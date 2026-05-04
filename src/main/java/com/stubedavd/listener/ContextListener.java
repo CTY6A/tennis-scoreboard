@@ -27,6 +27,7 @@ public class ContextListener implements ServletContextListener {
     public static final String MATCHES_SERVICE = "matchesService";
     public static final String FINISHED_MATCHES_PERSISTENCE_SERVICE = "finishedMatchesPersistenceService";
 
+    // Для помещения объектов в контекст можно использовать "естественные константы" — Bean.class.getSimpleName() или Bean.class.getName()
     @Override
     public void contextInitialized(ServletContextEvent sce) {
 

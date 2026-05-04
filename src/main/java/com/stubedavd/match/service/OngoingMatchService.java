@@ -9,10 +9,21 @@ import java.util.UUID;
 
 public class OngoingMatchService {
 
+    // TODO: Нет интерфейса для этого класса. (см. файл "service.md" в этом же пакете)
+
+    // TODO: Класс отвечает за создание объекта текущего матча (доменной модели).
+        // При этом он способствует смешению слоёв — сам использует зависимость от DAO и передаёт JPA Entity в доменную модель.
+        // (см. файл "Принцип разделения ответственности (Separation of Concerns).md" в этом же пакете)
+        // Этому классу должна быть не нужна зависимость PlayerRepository.
+        // А также создание нового матча можно перенести в OngoingMatchService и удалить этот сервис.
+
     private final Map<UUID, MatchScoreModel> ongoingMatches;
 
     public OngoingMatchService() {
 
+        // TODO: Веб-приложения по своей природе являются многопоточными.
+            // Поэтому стоит использовать потокобезопасную реализацию `Map`, специально предназначенную для многопоточной среды.
+            // Лучшим выбором здесь является `java.util.concurrent.ConcurrentHashMap`.
         this.ongoingMatches = new HashMap<>();
     }
 

@@ -7,7 +7,13 @@ import com.stubedavd.match.model.MatchScoreModel;
 import com.stubedavd.match.service.MatchScoreCalculationService;
 import org.junit.jupiter.api.*;
 
-public class TennisMatchScoreTest {
+public class TennisScoreTest {
+
+    // Для тестирования основной бизнес логики не должно быть необходимости в классах JPA Entity.
+        // После рефакторинга доменных моделей это исправится автоматически.
+
+    // Все тесты проходят успешно несмотря на то, что логика приложения работает некорректно.
+        // Это означает, что покрытие тестами недостаточное.
 
     private MatchScoreCalculationService matchScoreCalculationService;
     private MatchScoreModel matchScoreModel;
