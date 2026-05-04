@@ -2,7 +2,6 @@ package com.stubedavd.util;
 
 import com.stubedavd.exception.ValidationException;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 public final class Validator {
