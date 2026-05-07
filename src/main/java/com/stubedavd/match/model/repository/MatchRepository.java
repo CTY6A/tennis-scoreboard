@@ -1,6 +1,6 @@
-package com.stubedavd.match.repository;
+package com.stubedavd.match.model.repository;
 
-import com.stubedavd.match.entity.Match;
+import com.stubedavd.match.model.entity.Match;
 import com.stubedavd.exception.AlreadyExistException;
 import com.stubedavd.util.HibernateUtil;
 import jakarta.persistence.criteria.CriteriaBuilder;

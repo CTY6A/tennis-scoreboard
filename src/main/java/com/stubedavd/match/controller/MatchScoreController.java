@@ -1,12 +1,14 @@
 package com.stubedavd.match.controller;
 
-import com.stubedavd.player.entity.Player;
+import com.stubedavd.player.mapper.PlayerMapper;
+import com.stubedavd.player.model.domain.PlayerDomain;
+import com.stubedavd.player.model.entity.Player;
 import com.stubedavd.exception.NotFoundException;
 import com.stubedavd.listener.ContextListener;
-import com.stubedavd.match.model.MatchScoreModel;
-import com.stubedavd.match.service.FinishedMatchesPersistenceService;
-import com.stubedavd.match.service.MatchScoreCalculationService;
-import com.stubedavd.match.service.OngoingMatchService;
+import com.stubedavd.match.model.domain.MatchScoreModel;
+import com.stubedavd.match.model.service.FinishedMatchesPersistenceService;
+import com.stubedavd.match.model.service.MatchScoreCalculationService;
+import com.stubedavd.match.model.service.OngoingMatchService;
 import com.stubedavd.util.Validator;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -117,11 +119,11 @@ public class MatchScoreController extends HttpServlet {
 
     // Ответственность за подготовку счёта для отображения лучше вынести в специальный класс-маппер.
         // Соблюдение SRP в сервлете будет строже, если он не будет этим заниматься.
-    private String getPointsString(MatchScoreModel matchScoreModel, Player player1, Player player2) {
+    private String getPointsString(MatchScoreModel matchScoreModel, PlayerDomain player1, PlayerDomain player2) {
 
         int player1Points = matchScoreModel.getPoints().getScore(player1);
 
-        if (matchScoreModel.getPoints().isTieBreak()) {
+        if (matchScoreModel.getGames().isTieBreak()) {
             return String.valueOf(player1Points);
         }
 
@@ -169,7 +171,7 @@ public class MatchScoreController extends HttpServlet {
         } else {
 
             // Сервлет не должен работать с JPA Entity
-            Player player = getPlayer(request, matchScoreModel);
+            PlayerDomain player = getPlayer(request, matchScoreModel);
 
             matchScoreCalculationService.pointWon(matchScoreModel, player);
 
@@ -184,13 +186,13 @@ public class MatchScoreController extends HttpServlet {
     }
 
     // Сервлет не должен работать с JPA Entity
-    private Player getPlayer(HttpServletRequest request, MatchScoreModel matchScoreModel) {
+    private PlayerDomain getPlayer(HttpServletRequest request, MatchScoreModel matchScoreModel) {
 
         String playerIdString = request.getParameter("playerId");
 
         // Validator лучше внедрять через метод init(), а не обращать к нему напрямую из этого метода
         Validator.validatePlayerId(playerIdString);
-        Integer playerId = Integer.parseInt(playerIdString);
+        Long playerId = Long.parseLong(playerIdString);
 
         if (playerId.equals(matchScoreModel.getPlayer1().getId())) {
             return matchScoreModel.getPlayer1();

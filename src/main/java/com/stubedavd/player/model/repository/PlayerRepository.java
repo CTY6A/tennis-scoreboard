@@ -1,6 +1,6 @@
-package com.stubedavd.player.repository;
+package com.stubedavd.player.model.repository;
 
-import com.stubedavd.player.entity.Player;
+import com.stubedavd.player.model.entity.Player;
 import com.stubedavd.exception.AlreadyExistException;
 import com.stubedavd.util.HibernateUtil;
 import org.hibernate.Session;

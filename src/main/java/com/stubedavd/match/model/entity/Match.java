@@ -1,6 +1,6 @@
-package com.stubedavd.match.entity;
+package com.stubedavd.match.model.entity;
 
-import com.stubedavd.player.entity.Player;
+import com.stubedavd.player.model.entity.Player;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

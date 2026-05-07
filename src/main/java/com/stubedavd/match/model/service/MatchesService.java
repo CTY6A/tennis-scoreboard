@@ -1,8 +1,8 @@
-package com.stubedavd.match.service;
+package com.stubedavd.match.model.service;
 
-import com.stubedavd.match.dto.response.MatchResponseDto;
+import com.stubedavd.match.model.dto.response.MatchResponseDto;
 import com.stubedavd.match.mapper.MatchMapper;
-import com.stubedavd.match.repository.MatchRepository;
+import com.stubedavd.match.model.repository.MatchRepository;
 
 import java.util.List;
 

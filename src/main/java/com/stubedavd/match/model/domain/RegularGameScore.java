@@ -1,11 +1,12 @@
-package com.stubedavd.match.model;
+package com.stubedavd.match.model.domain;
 
+import com.stubedavd.player.model.domain.PlayerDomain;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter // TODO: сеттеры позволяют бесконтрольно изменять состояние модели
-public class MatchPoint extends Score {
+public class RegularGameScore extends Score {
 
     // TODO: Класс "кодирует" счёт в гейме, что способствует процедурному стилю. Поскольку в гейме особый счёт,
         // ООП подходом было бы создать специальный enum с константами ZERO, FIFTEEN, THIRTY, FORTY, ADVANTAGE для хранения счёта в гейме.
@@ -19,21 +20,17 @@ public class MatchPoint extends Score {
         // Также, эту часть логики было бы легче тестировать.
         // (см. файл "Анемичная vs Богатая модель предметной области.md" в этом же пакете)
 
-    // Класс называется MatchPoint — по типу счёта, за который он отвечает. Название RegularGameScore (и TiebreakScore) было бы более интуитивно понятным.
+    // Класс называется RegularGameScore — по типу счёта, за который он отвечает. Название RegularGameScore (и TiebreakScore) было бы более интуитивно понятным.
 
     // Можно назвать MIN_POINTS_TO_WIN
     public static final int POINTS_ADVANTAGE_LIMIT = 4;
-    public static final int TIE_BREAK_ADVANTAGE_LIMIT = 7;
 
-    private boolean tieBreak;
-
-    public MatchPoint() {
-
-        this.tieBreak = false;
+    public RegularGameScore(PlayerDomain player1Domain, PlayerDomain player2Domain) {
+        super(player1Domain, player2Domain);
     }
 
     @Override
     protected int getAdvantageLimit() {
-        return tieBreak ? TIE_BREAK_ADVANTAGE_LIMIT : POINTS_ADVANTAGE_LIMIT;
+        return POINTS_ADVANTAGE_LIMIT;
     }
 }

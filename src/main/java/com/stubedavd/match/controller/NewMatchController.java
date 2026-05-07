@@ -1,11 +1,11 @@
 package com.stubedavd.match.controller;
 
-import com.stubedavd.player.dto.request.PlayerRequestDto;
+import com.stubedavd.player.model.dto.request.PlayerRequestDto;
 import com.stubedavd.exception.NotFoundException;
 import com.stubedavd.exception.ValidationException;
 import com.stubedavd.listener.ContextListener;
 import com.stubedavd.player.mapper.PlayerMapper;
-import com.stubedavd.match.service.NewMatchService;
+import com.stubedavd.match.model.service.NewMatchService;
 import com.stubedavd.util.Validator;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;

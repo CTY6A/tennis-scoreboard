@@ -1,9 +1,9 @@
 package com.stubedavd.match.controller;
 
-import com.stubedavd.match.dto.response.MatchResponseDto;
+import com.stubedavd.match.model.dto.response.MatchResponseDto;
 import com.stubedavd.exception.NotFoundException;
 import com.stubedavd.listener.ContextListener;
-import com.stubedavd.match.service.MatchesService;
+import com.stubedavd.match.model.service.MatchesService;
 import com.stubedavd.util.Validator;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;

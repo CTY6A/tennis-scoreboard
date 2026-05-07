@@ -1,6 +1,6 @@
-package com.stubedavd.match.model;
+package com.stubedavd.match.model.domain;
 
-import com.stubedavd.player.entity.Player;
+import com.stubedavd.player.model.domain.PlayerDomain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,12 +26,12 @@ public class MatchScoreModel {
         // Также, эту часть логики было бы легче тестировать.
         // (см. файл "Анемичная vs Богатая модель предметной области.md" в этом же пакете)
 
-    private final Player player1;
-    private final Player player2;
+    private final PlayerDomain player1;
+    private final PlayerDomain player2;
 
-    private Player winner;
+    private PlayerDomain winner;
 
-    private MatchPoint points;
+    private RegularGameScore points;
     private MatchGame games;
     private MatchSet sets;
 
@@ -39,15 +39,15 @@ public class MatchScoreModel {
 
     private boolean matchFinished;
 
-    public MatchScoreModel(Player player1, Player player2) {
+    public MatchScoreModel(PlayerDomain player1, PlayerDomain player2) {
 
         this.player1 = player1;
         this.player2 = player2;
         this.winner = null;
 
-        this.points = new MatchPoint();
-        this.games = new MatchGame();
-        this.sets = new MatchSet();
+        this.points = new RegularGameScore(player1, player2);
+        this.games = new MatchGame(player1, player2);
+        this.sets = new MatchSet(player1, player2);
 
         this.score = new LinkedList<>();
 

@@ -1,7 +1,7 @@
 package com.stubedavd.match.mapper;
 
-import com.stubedavd.match.model.MatchScoreModel;
-import com.stubedavd.player.entity.Player;
+import com.stubedavd.match.model.domain.MatchScoreModel;
+import com.stubedavd.player.model.domain.PlayerDomain;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -17,5 +17,5 @@ public interface MatchScoreModelMapper {
     @Mapping(target = "sets", ignore = true)
     @Mapping(target = "matchFinished", ignore = true)
     @Mapping(target = "score", ignore = true)
-    MatchScoreModel toModel(Player player1, Player player2);
+    MatchScoreModel toDomain(PlayerDomain player1, PlayerDomain player2);
 }

@@ -1,4 +1,4 @@
-package com.stubedavd.match.dto.response;
+package com.stubedavd.match.model.dto.response;
 
 public record MatchResponseDto(
         String player1Name,

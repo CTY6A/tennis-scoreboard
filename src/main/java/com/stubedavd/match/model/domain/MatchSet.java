@@ -1,4 +1,6 @@
-package com.stubedavd.match.model;
+package com.stubedavd.match.model.domain;
+
+import com.stubedavd.player.model.domain.PlayerDomain;
 
 public class MatchSet extends Score {
 
@@ -13,6 +15,10 @@ public class MatchSet extends Score {
     // Константа MATCH_ADVANTAGE_LIMIT используется только внутри этого класса — ей достаточно быть private
     // Можно назвать MIN_POINTS_TO_WIN
     public static final int MATCH_ADVANTAGE_LIMIT = 2;
+
+    public MatchSet(PlayerDomain player1Domain, PlayerDomain player2Domain) {
+        super(player1Domain, player2Domain);
+    }
 
     @Override
     protected int getAdvantageLimit() {

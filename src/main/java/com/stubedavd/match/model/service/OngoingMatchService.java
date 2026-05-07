@@ -1,6 +1,6 @@
-package com.stubedavd.match.service;
+package com.stubedavd.match.model.service;
 
-import com.stubedavd.match.model.MatchScoreModel;
+import com.stubedavd.match.model.domain.MatchScoreModel;
 import com.stubedavd.exception.NotFoundException;
 
 import java.util.HashMap;

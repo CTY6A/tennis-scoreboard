@@ -1,10 +1,11 @@
 package com.stubedavd;
 
 import com.stubedavd.match.mapper.MatchScoreModelMapper;
-import com.stubedavd.player.entity.Player;
+import com.stubedavd.player.model.domain.PlayerDomain;
+import com.stubedavd.player.model.entity.Player;
 import com.stubedavd.exception.BusinessException;
-import com.stubedavd.match.model.MatchScoreModel;
-import com.stubedavd.match.service.MatchScoreCalculationService;
+import com.stubedavd.match.model.domain.MatchScoreModel;
+import com.stubedavd.match.model.service.MatchScoreCalculationService;
 import org.junit.jupiter.api.*;
 
 public class TennisScoreTest {
@@ -17,8 +18,8 @@ public class TennisScoreTest {
 
     private MatchScoreCalculationService matchScoreCalculationService;
     private MatchScoreModel matchScoreModel;
-    private Player player1;
-    private Player player2;
+    private PlayerDomain player1;
+    private PlayerDomain player2;
 
     @BeforeEach
     void setUpBeforeClass() {
@@ -26,13 +27,11 @@ public class TennisScoreTest {
         matchScoreCalculationService = new MatchScoreCalculationService();
         MatchScoreModelMapper matchScoreModelMapper = MatchScoreModelMapper.INSTANCE;
 
-        player1 = new Player();
-        player1.setName("Nadal");
+        player1 = new PlayerDomain(0l, "Nadal");
 
-        player2 = new Player();
-        player2.setName("Nadal");
+        player2 = new PlayerDomain(0l, "Nadal");
 
-        matchScoreModel = matchScoreModelMapper.toModel(player1, player2);
+        matchScoreModel = matchScoreModelMapper.toDomain(player1, player2);
     }
 
     @Test
@@ -90,7 +89,7 @@ public class TennisScoreTest {
         Assertions.assertFalse(matchScoreCalculationService.isMatchFinished(matchScoreModel));
     }
 
-    private void addGames(Player player, int gamesCount) {
+    private void addGames(PlayerDomain player, int gamesCount) {
 
         for (int i = 0; i < gamesCount; i++) {
             for (int j = 0; j < 4; j++) {

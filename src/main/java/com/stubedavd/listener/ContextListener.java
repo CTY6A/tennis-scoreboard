@@ -2,10 +2,10 @@ package com.stubedavd.listener;
 
 import com.stubedavd.match.mapper.MatchMapper;
 import com.stubedavd.match.mapper.MatchScoreModelMapper;
-import com.stubedavd.match.service.*;
+import com.stubedavd.match.model.service.*;
 import com.stubedavd.player.mapper.PlayerMapper;
-import com.stubedavd.match.repository.MatchRepository;
-import com.stubedavd.player.repository.PlayerRepository;
+import com.stubedavd.match.model.repository.MatchRepository;
+import com.stubedavd.player.model.repository.PlayerRepository;
 import com.stubedavd.util.HibernateUtil;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
@@ -52,7 +52,7 @@ public class ContextListener implements ServletContextListener {
         MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService();
         MatchesService matchesService = new MatchesService(matchMapper, matchRepository);
         FinishedMatchesPersistenceService finishedMatchesPersistenceService =
-                new FinishedMatchesPersistenceService(matchMapper, matchRepository);
+                new FinishedMatchesPersistenceService(playerMapper, matchMapper, matchRepository);
 
         servletContext.setAttribute(PLAYER_REPOSITORY, playerRepository);
         servletContext.setAttribute(MATCH_REPOSITORY, matchRepository);

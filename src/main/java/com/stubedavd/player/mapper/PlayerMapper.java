@@ -1,7 +1,8 @@
 package com.stubedavd.player.mapper;
 
-import com.stubedavd.player.dto.request.PlayerRequestDto;
-import com.stubedavd.player.entity.Player;
+import com.stubedavd.player.model.domain.PlayerDomain;
+import com.stubedavd.player.model.dto.request.PlayerRequestDto;
+import com.stubedavd.player.model.entity.Player;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -14,5 +15,8 @@ public interface PlayerMapper {
     PlayerRequestDto toRequestDto(String name);
 
     @Mapping(target = "id", ignore = true)
-    Player toModel(PlayerRequestDto playerRequestDto);
+    Player toEntity(PlayerRequestDto playerRequestDto);
+    Player toEntity(PlayerDomain playerDomain);
+
+    PlayerDomain toDomain(Player player);
 }

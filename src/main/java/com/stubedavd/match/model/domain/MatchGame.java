@@ -1,4 +1,6 @@
-package com.stubedavd.match.model;
+package com.stubedavd.match.model.domain;
+
+import com.stubedavd.player.model.domain.PlayerDomain;
 
 public class MatchGame extends Score {
 
@@ -14,14 +16,18 @@ public class MatchGame extends Score {
     // Можно назвать MIN_POINTS_TO_WIN
     public static final int GAME_ADVANTAGE_LIMIT = 6;
 
+    public MatchGame(PlayerDomain player1Domain, PlayerDomain player2Domain) {
+        super(player1Domain, player2Domain);
+    }
+
     @Override
     protected int getAdvantageLimit() {
         return GAME_ADVANTAGE_LIMIT;
     }
 
     @Override
-    public boolean checkTieBreak() {
+    public boolean isTieBreak() {
 
-        return super.checkTieBreak();
+        return super.isTieBreak();
     }
 }

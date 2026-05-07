@@ -1,4 +1,4 @@
-package com.stubedavd.player.dto.request;
+package com.stubedavd.player.model.dto.request;
 
 public record PlayerRequestDto(String name) {
 
