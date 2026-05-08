@@ -1,8 +1,9 @@
-package com.stubedavd.match.model.domain;
+package com.stubedavd.match.model.domain.score.impl;
 
+import com.stubedavd.match.model.domain.score.Score;
 import com.stubedavd.player.model.domain.PlayerDomain;
 
-public class MatchSet extends Score {
+public class SetScore extends Score {
 
     // TODO: Класс является анемичной моделью — он является лишь контейнером для данных, а значительная часть логики находится в сервисном слое.
         // Если бы у класса были методы, совершающие необходимую работу над полями,
@@ -10,18 +11,20 @@ public class MatchSet extends Score {
         // Также, эту часть логики было бы легче тестировать.
         // (см. файл "Анемичная vs Богатая модель предметной области.md" в этом же пакете)
 
-    // Класс называется MatchSet — по типу счёта, за который он отвечает. Название Score было бы более интуитивно понятным.
+    private static final int MIN_POINTS_TO_WIN = 6;
 
-    // Константа MATCH_ADVANTAGE_LIMIT используется только внутри этого класса — ей достаточно быть private
-    // Можно назвать MIN_POINTS_TO_WIN
-    public static final int MATCH_ADVANTAGE_LIMIT = 2;
-
-    public MatchSet(PlayerDomain player1Domain, PlayerDomain player2Domain) {
+    public SetScore(PlayerDomain player1Domain, PlayerDomain player2Domain) {
         super(player1Domain, player2Domain);
     }
 
     @Override
     protected int getAdvantageLimit() {
-        return MATCH_ADVANTAGE_LIMIT;
+        return MIN_POINTS_TO_WIN;
+    }
+
+    @Override
+    public boolean isTieBreak() {
+
+        return super.isTieBreak();
     }
 }

@@ -1,8 +1,6 @@
 package com.stubedavd.match.controller;
 
-import com.stubedavd.player.mapper.PlayerMapper;
 import com.stubedavd.player.model.domain.PlayerDomain;
-import com.stubedavd.player.model.entity.Player;
 import com.stubedavd.exception.NotFoundException;
 import com.stubedavd.listener.ContextListener;
 import com.stubedavd.match.model.domain.MatchScoreModel;
@@ -101,15 +99,15 @@ public class MatchScoreController extends HttpServlet {
         // Вместо передачи данных во View по частям, лучше создать специальный DTO
         request.setAttribute("player1Id", matchScoreModel.getPlayer1().getId());
         request.setAttribute("player1Name", matchScoreModel.getPlayer1().getName());
-        request.setAttribute("player1Sets", matchScoreModel.getSets().getScore(matchScoreModel.getPlayer1()));
-        request.setAttribute("player1Games", matchScoreModel.getGames().getScore(matchScoreModel.getPlayer1()));
+        request.setAttribute("player1Sets", matchScoreModel.getMatchScore().getScore(matchScoreModel.getPlayer1()));
+        request.setAttribute("player1Games", matchScoreModel.getSetScore().getScore(matchScoreModel.getPlayer1()));
         request.setAttribute("player1Points", player1PointsString);
 
         // Вместо передачи данных во View по частям, лучше создать специальный DTO
         request.setAttribute("player2Id", matchScoreModel.getPlayer2().getId());
         request.setAttribute("player2Name", matchScoreModel.getPlayer2().getName());
-        request.setAttribute("player2Sets", matchScoreModel.getSets().getScore(matchScoreModel.getPlayer2()));
-        request.setAttribute("player2Games", matchScoreModel.getGames().getScore(matchScoreModel.getPlayer2()));
+        request.setAttribute("player2Sets", matchScoreModel.getMatchScore().getScore(matchScoreModel.getPlayer2()));
+        request.setAttribute("player2Games", matchScoreModel.getSetScore().getScore(matchScoreModel.getPlayer2()));
         request.setAttribute("player2Points", player2PointsString);
 
         request.setAttribute("uuid", uuid);
@@ -121,13 +119,12 @@ public class MatchScoreController extends HttpServlet {
         // Соблюдение SRP в сервлете будет строже, если он не будет этим заниматься.
     private String getPointsString(MatchScoreModel matchScoreModel, PlayerDomain player1, PlayerDomain player2) {
 
-        int player1Points = matchScoreModel.getPoints().getScore(player1);
-
-        if (matchScoreModel.getGames().isTieBreak()) {
-            return String.valueOf(player1Points);
+        if (matchScoreModel.getSetScore().isTieBreak()) {
+            return String.valueOf(matchScoreModel.getTiebreakScore().getScore(player1));
         }
 
-        int player2Points = matchScoreModel.getPoints().getScore(player2);
+        int player1Points = matchScoreModel.getRegularGameScore().getScore(player1);
+        int player2Points = matchScoreModel.getRegularGameScore().getScore(player2);
 
         if (player1Points >= 4 || player2Points >= 4) {
 

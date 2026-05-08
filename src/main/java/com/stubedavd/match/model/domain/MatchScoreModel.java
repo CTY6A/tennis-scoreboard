@@ -1,5 +1,9 @@
 package com.stubedavd.match.model.domain;
 
+import com.stubedavd.match.model.domain.score.impl.MatchScore;
+import com.stubedavd.match.model.domain.score.impl.RegularGameScore;
+import com.stubedavd.match.model.domain.score.impl.SetScore;
+import com.stubedavd.match.model.domain.score.impl.TiebreakScore;
 import com.stubedavd.player.model.domain.PlayerDomain;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,11 +35,12 @@ public class MatchScoreModel {
 
     private PlayerDomain winner;
 
-    private RegularGameScore points;
-    private MatchGame games;
-    private MatchSet sets;
+    private RegularGameScore regularGameScore;
+    private TiebreakScore tiebreakScore;
+    private SetScore setScore;
+    private MatchScore matchScore;
 
-    private final List<MatchGame> score;
+    private final List<SetScore> score;
 
     private boolean matchFinished;
 
@@ -45,9 +50,10 @@ public class MatchScoreModel {
         this.player2 = player2;
         this.winner = null;
 
-        this.points = new RegularGameScore(player1, player2);
-        this.games = new MatchGame(player1, player2);
-        this.sets = new MatchSet(player1, player2);
+        this.regularGameScore = new RegularGameScore(player1, player2);
+        this.tiebreakScore = new TiebreakScore(player1, player2);
+        this.setScore = new SetScore(player1, player2);
+        this.matchScore = new MatchScore(player1, player2);
 
         this.score = new LinkedList<>();
 

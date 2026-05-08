@@ -1,9 +1,10 @@
 package com.stubedavd.match.model.service;
 
+import com.stubedavd.match.model.domain.score.impl.TiebreakScore;
 import com.stubedavd.player.model.domain.PlayerDomain;
 import com.stubedavd.exception.BusinessException;
-import com.stubedavd.match.model.domain.MatchGame;
-import com.stubedavd.match.model.domain.RegularGameScore;
+import com.stubedavd.match.model.domain.score.impl.SetScore;
+import com.stubedavd.match.model.domain.score.impl.RegularGameScore;
 import com.stubedavd.match.model.domain.MatchScoreModel;
 
 public class MatchScoreCalculationService {
@@ -53,7 +54,7 @@ public class MatchScoreCalculationService {
             tieBreakProcessing(matchScoreModel, player);
         } else {
 
-            matchScoreModel.getPoints().addScore(player);
+            matchScoreModel.getRegularGameScore().addScore(player);
 
             if (isGameWon(matchScoreModel, player)) {
 
@@ -66,9 +67,9 @@ public class MatchScoreCalculationService {
 
     private void gameWonProcessing(MatchScoreModel matchScoreModel, PlayerDomain player) {
 
-        matchScoreModel.setPoints(new RegularGameScore(matchScoreModel.getPlayer1(), matchScoreModel.getPlayer2()));
+        matchScoreModel.setRegularGameScore(new RegularGameScore(matchScoreModel.getPlayer1(), matchScoreModel.getPlayer2()));
 
-        matchScoreModel.getGames().addScore(player);
+        matchScoreModel.getSetScore().addScore(player);
 
         if (isSetWon(matchScoreModel, player)) {
 
@@ -80,9 +81,9 @@ public class MatchScoreCalculationService {
 
         recordScore(matchScoreModel);
 
-        matchScoreModel.setGames(new MatchGame(matchScoreModel.getPlayer1(), matchScoreModel.getPlayer2()));
+        matchScoreModel.setSetScore(new SetScore(matchScoreModel.getPlayer1(), matchScoreModel.getPlayer2()));
 
-        matchScoreModel.getSets().addScore(player);
+        matchScoreModel.getMatchScore().addScore(player);
 
         if (isMatchWon(matchScoreModel, player)) {
 
@@ -93,49 +94,46 @@ public class MatchScoreCalculationService {
 
     private void recordScore(MatchScoreModel matchScoreModel) {
 
-        matchScoreModel.getScore().add(matchScoreModel.getGames());
+        matchScoreModel.getScore().add(matchScoreModel.getSetScore());
     }
 
     private void tieBreakProcessing(MatchScoreModel matchScoreModel, PlayerDomain player) {
 
-        matchScoreModel.getPoints().addScore(player);
+        matchScoreModel.getTiebreakScore().addScore(player);
 
         if (isTieBreakWon(matchScoreModel, player)) {
 
-            matchScoreModel.setPoints(new RegularGameScore(matchScoreModel.getPlayer1(), matchScoreModel.getPlayer2()));
+            //TODO: delete this
+            matchScoreModel.setRegularGameScore(new RegularGameScore(matchScoreModel.getPlayer1(), matchScoreModel.getPlayer2()));
+            matchScoreModel.setTiebreakScore(new TiebreakScore(matchScoreModel.getPlayer1(), matchScoreModel.getPlayer2()));
 
-            matchScoreModel.getGames().addScore(player);
+            matchScoreModel.getSetScore().addScore(player);
 
             setWonProcessing(matchScoreModel, player);
         }
     }
 
     private boolean isTieBreak(MatchScoreModel matchScoreModel) {
-        return matchScoreModel.getGames().isTieBreak();
+        return matchScoreModel.getSetScore().isTieBreak();
     }
 
     private boolean isGameWon(MatchScoreModel matchScoreModel, PlayerDomain player) {
 
-        return matchScoreModel.getPoints().isRoundWon(player);
+        return matchScoreModel.getRegularGameScore().isRoundWon(player);
     }
 
     private boolean isSetWon(MatchScoreModel matchScoreModel, PlayerDomain player) {
 
-        return matchScoreModel.getGames().isRoundWon(player);
+        return matchScoreModel.getSetScore().isRoundWon(player);
     }
 
     private boolean isMatchWon(MatchScoreModel matchScoreModel, PlayerDomain player) {
 
-        return matchScoreModel.getSets().isRoundWon(player);
+        return matchScoreModel.getMatchScore().isRoundWon(player);
     }
 
     private boolean isTieBreakWon(MatchScoreModel matchScoreModel, PlayerDomain player) {
 
-        return matchScoreModel.getPoints().isRoundWon(player);
-    }
-
-    private boolean checkTieBreak(MatchScoreModel matchScoreModel) {
-
-        return matchScoreModel.getGames().isTieBreak();
+        return matchScoreModel.getTiebreakScore().isRoundWon(player);
     }
 }

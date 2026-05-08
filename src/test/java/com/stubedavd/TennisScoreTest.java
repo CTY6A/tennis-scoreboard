@@ -2,7 +2,6 @@ package com.stubedavd;
 
 import com.stubedavd.match.mapper.MatchScoreModelMapper;
 import com.stubedavd.player.model.domain.PlayerDomain;
-import com.stubedavd.player.model.entity.Player;
 import com.stubedavd.exception.BusinessException;
 import com.stubedavd.match.model.domain.MatchScoreModel;
 import com.stubedavd.match.model.service.MatchScoreCalculationService;
@@ -48,7 +47,7 @@ public class TennisScoreTest {
         matchScoreCalculationService.pointWon(matchScoreModel, player1);
         matchScoreCalculationService.pointWon(matchScoreModel, player1);
 
-        Assertions.assertEquals(1, matchScoreModel.getGames().getScore(player1));
+        Assertions.assertEquals(1, matchScoreModel.getSetScore().getScore(player1));
     }
 
     @Test
@@ -62,21 +61,21 @@ public class TennisScoreTest {
         matchScoreCalculationService.pointWon(matchScoreModel, player2);
 
 
-        Assertions.assertEquals(3, matchScoreModel.getPoints().getScore(player1));
-        Assertions.assertEquals(3, matchScoreModel.getPoints().getScore(player2));
+        Assertions.assertEquals(3, matchScoreModel.getRegularGameScore().getScore(player1));
+        Assertions.assertEquals(3, matchScoreModel.getRegularGameScore().getScore(player2));
 
         matchScoreCalculationService.pointWon(matchScoreModel, player1);
         matchScoreCalculationService.pointWon(matchScoreModel, player2);
 
         Assertions.assertEquals(
-                matchScoreModel.getPoints().getScore(player1),
-                matchScoreModel.getPoints().getScore(player2)
+                matchScoreModel.getRegularGameScore().getScore(player1),
+                matchScoreModel.getRegularGameScore().getScore(player2)
         );
 
         matchScoreCalculationService.pointWon(matchScoreModel, player1);
         matchScoreCalculationService.pointWon(matchScoreModel, player1);
 
-        Assertions.assertEquals(1, matchScoreModel.getGames().getScore(player1));
+        Assertions.assertEquals(1, matchScoreModel.getSetScore().getScore(player1));
     }
 
     @Test
@@ -85,7 +84,7 @@ public class TennisScoreTest {
         addGames(player1, 6);
         addGames(player2, 4);
 
-        Assertions.assertEquals(1, matchScoreModel.getSets().getScore(player1));
+        Assertions.assertEquals(1, matchScoreModel.getMatchScore().getScore(player1));
         Assertions.assertFalse(matchScoreCalculationService.isMatchFinished(matchScoreModel));
     }
 
@@ -105,8 +104,8 @@ public class TennisScoreTest {
         addGames(player2, 6);
         addGames(player1, 1);
 
-        Assertions.assertEquals(6, matchScoreModel.getGames().getScore(player1));
-        Assertions.assertEquals(6, matchScoreModel.getGames().getScore(player2));
+        Assertions.assertEquals(6, matchScoreModel.getSetScore().getScore(player1));
+        Assertions.assertEquals(6, matchScoreModel.getSetScore().getScore(player2));
 
         for (int i = 0; i < 5; i++) {
             matchScoreCalculationService.pointWon(matchScoreModel, player1);
@@ -118,7 +117,7 @@ public class TennisScoreTest {
             matchScoreCalculationService.pointWon(matchScoreModel, player1);
         }
 
-        Assertions.assertEquals(1, matchScoreModel.getSets().getScore(player1));
+        Assertions.assertEquals(1, matchScoreModel.getMatchScore().getScore(player1));
     }
 
     @Test
@@ -127,19 +126,19 @@ public class TennisScoreTest {
         addGames(player1, 6);
         addGames(player2, 0);
 
-        Assertions.assertEquals(1, matchScoreModel.getSets().getScore(player1));
+        Assertions.assertEquals(1, matchScoreModel.getMatchScore().getScore(player1));
 
         addGames(player1, 6);
         addGames(player2, 0);
 
         Assertions.assertTrue(matchScoreCalculationService.isMatchFinished(matchScoreModel));
-        Assertions.assertEquals(2, matchScoreModel.getSets().getScore(player1));
+        Assertions.assertEquals(2, matchScoreModel.getMatchScore().getScore(player1));
 
         try {
             matchScoreCalculationService.pointWon(matchScoreModel, player1);
         } catch (BusinessException ignored) {}
 
-        Assertions.assertEquals(2, matchScoreModel.getSets().getScore(player1));
+        Assertions.assertEquals(2, matchScoreModel.getMatchScore().getScore(player1));
     }
 
     @Test
@@ -149,7 +148,7 @@ public class TennisScoreTest {
         addGames(player2, 5);
         addGames(player1, 2);
 
-        Assertions.assertEquals(1, matchScoreModel.getSets().getScore(player1));
+        Assertions.assertEquals(1, matchScoreModel.getMatchScore().getScore(player1));
     }
 
     @Test
@@ -165,7 +164,7 @@ public class TennisScoreTest {
 
         matchScoreCalculationService.pointWon(matchScoreModel, player1);
 
-        Assertions.assertEquals(0, matchScoreModel.getGames().getScore(player1));
+        Assertions.assertEquals(0, matchScoreModel.getSetScore().getScore(player1));
     }
 
     @Test
@@ -176,6 +175,6 @@ public class TennisScoreTest {
         matchScoreCalculationService.pointWon(matchScoreModel, player1);
         matchScoreCalculationService.pointWon(matchScoreModel, player1);
 
-        Assertions.assertEquals(1, matchScoreModel.getGames().getScore(player1));
+        Assertions.assertEquals(1, matchScoreModel.getSetScore().getScore(player1));
     }
 }

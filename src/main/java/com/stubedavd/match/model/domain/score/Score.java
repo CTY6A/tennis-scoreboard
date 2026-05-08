@@ -1,4 +1,4 @@
-package com.stubedavd.match.model.domain;
+package com.stubedavd.match.model.domain.score;
 
 import com.stubedavd.exception.BusinessException;
 import com.stubedavd.player.model.domain.PlayerDomain;
