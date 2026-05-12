@@ -87,14 +87,12 @@ public class MatchScoreController extends HttpServlet {
 
         String player1PointsString = getPointsString(
                 matchScoreModel,
-                matchScoreModel.getPlayer1(),
-                matchScoreModel.getPlayer2()
+                matchScoreModel.getPlayer1()
         );
 
         String player2PointsString = getPointsString(
                 matchScoreModel,
-                matchScoreModel.getPlayer2(),
-                matchScoreModel.getPlayer1()
+                matchScoreModel.getPlayer2()
         );
 
         // Вместо передачи данных во View по частям, лучше создать специальный DTO
@@ -118,7 +116,7 @@ public class MatchScoreController extends HttpServlet {
 
     // Ответственность за подготовку счёта для отображения лучше вынести в специальный класс-маппер.
         // Соблюдение SRP в сервлете будет строже, если он не будет этим заниматься.
-    private String getPointsString(MatchScoreModel matchScoreModel, PlayerDomain player1, PlayerDomain player2) {
+    private String getPointsString(MatchScoreModel matchScoreModel, PlayerDomain player1) {
 
         if (matchScoreModel.getSetScore().isTieBreak()) {
             return String.valueOf(matchScoreModel.getTiebreakScore().getScore(player1));

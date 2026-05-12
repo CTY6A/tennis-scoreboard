@@ -27,9 +27,9 @@ public class TennisScoreTest {
         matchScoreCalculationService = new MatchScoreCalculationService();
         MatchScoreModelMapper matchScoreModelMapper = MatchScoreModelMapper.INSTANCE;
 
-        player1 = new PlayerDomain(0l, "Nadal");
+        player1 = new PlayerDomain(0L, "Nadal");
 
-        player2 = new PlayerDomain(0l, "Nadal");
+        player2 = new PlayerDomain(0L, "Nadal");
 
         matchScoreModel = matchScoreModelMapper.toDomain(player1, player2);
     }
