@@ -41,11 +41,11 @@ public final class Validator {
             );
         }
 
-        if (playerName1.length() > 20) {
+        if (playerName1.length() > 23) {
             throw new ValidationException("Player 1 name is too long");
         }
 
-        if (playerName2.length() > 20) {
+        if (playerName2.length() > 23) {
             throw new ValidationException("Player 2 name is too long");
         }
     }

@@ -15,7 +15,7 @@ public abstract class Score {
 
     public void addScore(PlayerDomain player) {
 
-        if (isRoundWon(player1Domain) || isRoundWon(player2Domain)) {
+        if (isRoundFinished()) {
             throw new BusinessException("This round is already finished");
         }
 
@@ -56,21 +56,28 @@ public abstract class Score {
             throw new IllegalArgumentException("Player " + player + " is not in domain in this score");
         }
 
-        return isAdvantageLimitReached(winnerCounter) && isTwoPointsAdvantage(winnerCounter, loserCounter);
+        return isMinPointsToWinReached(winnerCounter) && isTwoPointsAdvantage(winnerCounter, loserCounter);
+    }
+
+    protected boolean isTieBreak() {
+        return isMinPointsToWinReached(player1Score) && isMinPointsToWinReached(player2Score);
+    }
+
+    protected boolean isRoundFinished() {
+        return isRoundWon(player1Domain) || isRoundWon(player2Domain);
+    }
+
+    protected boolean isMatchFinished() {
+        return isMinPointsToWinReached(player1Score) || isMinPointsToWinReached(player2Score);
     }
 
     private boolean isTwoPointsAdvantage(int winnerScore, int loserScore) {
         return winnerScore > loserScore + 1;
     }
 
-    private boolean isAdvantageLimitReached(int score) {
-        return score >= getAdvantageLimit();
+    private boolean isMinPointsToWinReached(int score) {
+        return score >= getMinPointsToWin();
     }
 
-    protected boolean isTieBreak() {
-
-        return isAdvantageLimitReached(player1Score) && isAdvantageLimitReached(player2Score);
-    }
-
-    protected abstract int getAdvantageLimit();
+    protected abstract int getMinPointsToWin();
 }

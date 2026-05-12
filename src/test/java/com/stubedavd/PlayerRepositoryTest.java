@@ -19,8 +19,7 @@ public class PlayerRepositoryTest {
     @Test
     public void testAddAlreadyExistsPlayer() {
 
-        Player player = new Player();
-        player.setName("Test");
+        Player player = new Player("Test");
 
         playerRepository.save(player);
 

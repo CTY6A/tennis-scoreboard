@@ -1,6 +1,7 @@
 package com.stubedavd;
 
 import com.stubedavd.match.mapper.MatchScoreModelMapper;
+import com.stubedavd.match.model.domain.score.value.RegularGameScoreValue;
 import com.stubedavd.player.model.domain.PlayerDomain;
 import com.stubedavd.exception.BusinessException;
 import com.stubedavd.match.model.domain.MatchScoreModel;
@@ -61,8 +62,8 @@ public class TennisScoreTest {
         matchScoreCalculationService.pointWon(matchScoreModel, player2);
 
 
-        Assertions.assertEquals(3, matchScoreModel.getRegularGameScore().getScore(player1));
-        Assertions.assertEquals(3, matchScoreModel.getRegularGameScore().getScore(player2));
+        Assertions.assertEquals(RegularGameScoreValue.FORTY, matchScoreModel.getRegularGameScore().getScore(player1));
+        Assertions.assertEquals(RegularGameScoreValue.FORTY, matchScoreModel.getRegularGameScore().getScore(player2));
 
         matchScoreCalculationService.pointWon(matchScoreModel, player1);
         matchScoreCalculationService.pointWon(matchScoreModel, player2);

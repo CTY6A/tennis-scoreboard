@@ -6,29 +6,14 @@ import com.stubedavd.match.model.domain.score.impl.SetScore;
 import com.stubedavd.match.model.domain.score.impl.TiebreakScore;
 import com.stubedavd.player.model.domain.PlayerDomain;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 import java.util.LinkedList;
 import java.util.List;
 
 @Getter
-@Setter // TODO: сеттеры позволяют бесконтрольно изменять состояние модели
 @ToString
 public class MatchScoreModel {
-
-    // TODO: Класс хранит ссылки на JPA-сущности (`Player`). Использование объектов JPA Entity в доменной логике
-        // создаёт прямую зависимость доменного слоя от слоя персистентности (долговременного хранения данных)
-        // и смешивает слои приложения, что нарушает чистоту архитектуры.
-        // Это может привести к проблемам с ленивой загрузкой (`LazyInitializationException`)
-        // или к неожиданным изменениям в базе данных, если состояние `Player` будет изменено в ходе бизнес-логики.
-        // Доменные модели должны оперировать другими доменными моделями, а не сущностями, привязанными к базе данных.
-
-    // TODO: Класс является анемичной моделью — он является лишь контейнером для данных, а значительная часть логики находится в сервисном слое.
-        // Если бы у класса вместо простых сеттеров были методы, совершающие необходимую работу над полями,
-        // это больше соответствовало бы ООП стилю и обязанности класса (в роли доменной модели).
-        // Также, эту часть логики было бы легче тестировать.
-        // (см. файл "Анемичная vs Богатая модель предметной области.md" в этом же пакете)
 
     private final PlayerDomain player1;
     private final PlayerDomain player2;
@@ -38,11 +23,9 @@ public class MatchScoreModel {
     private RegularGameScore regularGameScore;
     private TiebreakScore tiebreakScore;
     private SetScore setScore;
-    private MatchScore matchScore;
+    private final MatchScore matchScore;
 
-    private final List<SetScore> score;
-
-    private boolean matchFinished;
+    private final List<SetScore> protocol;
 
     public MatchScoreModel(PlayerDomain player1, PlayerDomain player2) {
 
@@ -55,8 +38,84 @@ public class MatchScoreModel {
         this.setScore = new SetScore(player1, player2);
         this.matchScore = new MatchScore(player1, player2);
 
-        this.score = new LinkedList<>();
+        this.protocol = new LinkedList<>();
+    }
 
-        this.matchFinished = false;
+    public void pointWon(PlayerDomain player) {
+        
+        if (isTieBreak()) {
+            tieBreakProcessing(player);
+            return;
+        }
+
+        regularGameScore.addScore(player);
+
+        if (isGameWon(player)) {
+            gameWonProcessing(player);
+        }
+
+    }
+
+    private void gameWonProcessing(PlayerDomain player) {
+
+        regularGameScore = new RegularGameScore(player1, player2);
+
+        setScore.addScore(player);
+
+        if (isSetWon(player)) {
+            setWonProcessing(player);
+        }
+    }
+
+    private void setWonProcessing(PlayerDomain player) {
+
+        recordScore();
+
+        setScore = new SetScore(player1, player2);
+
+        matchScore.addScore(player);
+
+        if (isMatchWon(player)) {
+            winner = player;
+        }
+    }
+
+    private void recordScore() {
+        protocol.add(setScore);
+    }
+
+    private void tieBreakProcessing(PlayerDomain player) {
+
+        tiebreakScore.addScore(player);
+
+        if (isTieBreakWon(player)) {
+
+            regularGameScore = new RegularGameScore(player1, player2);
+            tiebreakScore = new TiebreakScore(player1, player2);
+
+            setScore.addScore(player);
+
+            setWonProcessing(player);
+        }
+    }
+
+    private boolean isTieBreak() {
+        return setScore.isTieBreak();
+    }
+
+    private boolean isGameWon(PlayerDomain player) {
+        return regularGameScore.isRoundWon(player);
+    }
+
+    private boolean isSetWon(PlayerDomain player) {
+        return setScore.isRoundWon(player);
+    }
+
+    private boolean isMatchWon(PlayerDomain player) {
+        return matchScore.isRoundWon(player);
+    }
+
+    private boolean isTieBreakWon(PlayerDomain player) {
+        return tiebreakScore.isRoundWon(player);
     }
 }

@@ -1,5 +1,6 @@
 package com.stubedavd.match.controller;
 
+import com.stubedavd.match.model.domain.score.value.RegularGameScoreValue;
 import com.stubedavd.player.model.domain.PlayerDomain;
 import com.stubedavd.exception.NotFoundException;
 import com.stubedavd.listener.ContextListener;
@@ -97,15 +98,15 @@ public class MatchScoreController extends HttpServlet {
         );
 
         // Вместо передачи данных во View по частям, лучше создать специальный DTO
-        request.setAttribute("player1Id", matchScoreModel.getPlayer1().getId());
-        request.setAttribute("player1Name", matchScoreModel.getPlayer1().getName());
+        request.setAttribute("player1Id", matchScoreModel.getPlayer1().id());
+        request.setAttribute("player1Name", matchScoreModel.getPlayer1().name());
         request.setAttribute("player1Sets", matchScoreModel.getMatchScore().getScore(matchScoreModel.getPlayer1()));
         request.setAttribute("player1Games", matchScoreModel.getSetScore().getScore(matchScoreModel.getPlayer1()));
         request.setAttribute("player1Points", player1PointsString);
 
         // Вместо передачи данных во View по частям, лучше создать специальный DTO
-        request.setAttribute("player2Id", matchScoreModel.getPlayer2().getId());
-        request.setAttribute("player2Name", matchScoreModel.getPlayer2().getName());
+        request.setAttribute("player2Id", matchScoreModel.getPlayer2().id());
+        request.setAttribute("player2Name", matchScoreModel.getPlayer2().name());
         request.setAttribute("player2Sets", matchScoreModel.getMatchScore().getScore(matchScoreModel.getPlayer2()));
         request.setAttribute("player2Games", matchScoreModel.getSetScore().getScore(matchScoreModel.getPlayer2()));
         request.setAttribute("player2Points", player2PointsString);
@@ -123,27 +124,9 @@ public class MatchScoreController extends HttpServlet {
             return String.valueOf(matchScoreModel.getTiebreakScore().getScore(player1));
         }
 
-        int player1Points = matchScoreModel.getRegularGameScore().getScore(player1);
-        int player2Points = matchScoreModel.getRegularGameScore().getScore(player2);
+        RegularGameScoreValue player1Points = matchScoreModel.getRegularGameScore().getScore(player1);
 
-        if (player1Points >= 4 || player2Points >= 4) {
-
-            if (player1Points > player2Points) {
-
-                return "AD";
-            } else {
-
-                return "40";
-            }
-        } else {
-
-            return switch (player1Points) {
-                case 1 -> "15";
-                case 2 -> "30";
-                case 3 -> "40";
-                default -> "0"; // По умолчанию не должен возвращаться 0. Здесь лучше выбрасывать исключение.
-            };
-        }
+        return player1Points.toString();
     }
 
     private UUID getUuid(HttpServletRequest request) {
@@ -191,11 +174,11 @@ public class MatchScoreController extends HttpServlet {
         Validator.validatePlayerId(playerIdString);
         Long playerId = Long.parseLong(playerIdString);
 
-        if (playerId.equals(matchScoreModel.getPlayer1().getId())) {
+        if (playerId.equals(matchScoreModel.getPlayer1().id())) {
             return matchScoreModel.getPlayer1();
         }
 
-        if (playerId.equals(matchScoreModel.getPlayer2().getId())) {
+        if (playerId.equals(matchScoreModel.getPlayer2().id())) {
             return matchScoreModel.getPlayer2();
         }
 
@@ -211,15 +194,16 @@ public class MatchScoreController extends HttpServlet {
         finishedMatchesPersistenceService.recordMatch(matchScoreModel);
         ongoingMatchService.delete(uuid);
 
-        request.setAttribute("player1Name", matchScoreModel.getPlayer1().getName());
+        request.setAttribute("player1Name", matchScoreModel.getPlayer1().name());
         request.setAttribute("player1Score", matchScoreModel
-                .getScore()
+                .getProtocol()
                 .stream()
                 .map(matchGame -> matchGame.getScore(matchScoreModel.getPlayer1()))
                 .toList());
 
-        request.setAttribute("player2Name", matchScoreModel.getPlayer2().getName());
-        request.setAttribute("player2Score", matchScoreModel.getScore()
+        request.setAttribute("player2Name", matchScoreModel.getPlayer2().name());
+        request.setAttribute("player2Score", matchScoreModel
+                .getProtocol()
                 .stream()
                 .map(matchGame -> matchGame.getScore(matchScoreModel.getPlayer2()))
                 .toList());

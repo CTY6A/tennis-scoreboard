@@ -12,10 +12,10 @@ public interface MatchScoreModelMapper {
     MatchScoreModelMapper INSTANCE = Mappers.getMapper(MatchScoreModelMapper.class);
 
     @Mapping(target = "winner", ignore = true)
-    @Mapping(target = "points", ignore = true)
-    @Mapping(target = "games", ignore = true)
-    @Mapping(target = "sets", ignore = true)
-    @Mapping(target = "matchFinished", ignore = true)
-    @Mapping(target = "score", ignore = true)
+    @Mapping(target = "regularGameScore", ignore = true)
+    @Mapping(target = "tiebreakScore", ignore = true)
+    @Mapping(target = "setScore", ignore = true)
+    @Mapping(target = "matchScore", ignore = true)
+    @Mapping(target = "protocol", ignore = true)
     MatchScoreModel toDomain(PlayerDomain player1, PlayerDomain player2);
 }
