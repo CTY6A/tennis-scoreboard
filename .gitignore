@@ -1,5 +1,9 @@
 target/
 !.mvn/wrapper/maven-wrapper.jar
+
+### Sensitive configuration files ###
+hibernate.cfg.xml
+!**/hibernate.cfg.xml.template
 !**/src/main/**/target/
 !**/src/test/**/target/
 

@@ -16,6 +16,15 @@ public interface PlayerMapper {
 
     PlayerRequestDto toRequestDto(String name);
 
+    @Mapping(target = "id", ignore = true)
+    Player toEntity(PlayerRequestDto playerRequestDto);
+
+    Player toEntity(PlayerDomain playerDomain);
+
+    PlayerDomain toDomain(Player player);
+
+    PlayerResponseDto toResponseDto(Player player);
+
     @ObjectFactory
     default Player createPlayerFromRequestDto(PlayerRequestDto dto) {
         return new Player(dto.name());
@@ -25,13 +34,4 @@ public interface PlayerMapper {
     default Player createPlayerFromDomain(PlayerDomain domain) {
         return new Player(domain.id(), domain.name());
     }
-
-    @Mapping(target = "id", ignore = true)
-    Player toEntity(PlayerRequestDto playerRequestDto);
-
-    Player toEntity(PlayerDomain playerDomain);
-
-    PlayerDomain toDomain(Player player);
-
-    PlayerResponseDto toResponseDto(Player player);
 }
