@@ -1,6 +1,6 @@
 package com.stubedavd.filter;
 
-import com.stubedavd.exception.AlreadyExistException;
+import com.stubedavd.exception.EntityAlreadyExistException;
 import com.stubedavd.exception.DatabaseException;
 import com.stubedavd.exception.NotFoundException;
 import com.stubedavd.exception.ValidationException;
@@ -50,7 +50,7 @@ public class ExceptionHandlingFilter implements Filter {
 
             writeError(httpResponse, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 
-        } catch (AlreadyExistException e) {
+        } catch (EntityAlreadyExistException e) {
 
             writeError(httpResponse, HttpServletResponse.SC_CONFLICT, e.getMessage());
 

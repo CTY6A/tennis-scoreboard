@@ -39,7 +39,7 @@ public class ContextListener implements ServletContextListener {
         MatchMapper matchMapper = MatchMapper.INSTANCE;
         MatchScoreModelMapper matchScoreModelMapper = MatchScoreModelMapper.INSTANCE;
 
-        PlayerRepository playerRepository = new PlayerRepository();
+        PlayerRepository playerRepository = new PlayerRepository(HibernateUtil.getSessionFactory());
         MatchRepository matchRepository = new MatchRepository();
 
         OngoingMatchService ongoingMatchService = new OngoingMatchService();

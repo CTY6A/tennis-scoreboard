@@ -1,7 +1,7 @@
 package com.stubedavd.match.model.repository;
 
 import com.stubedavd.match.model.entity.Match;
-import com.stubedavd.exception.AlreadyExistException;
+import com.stubedavd.exception.EntityAlreadyExistException;
 import com.stubedavd.util.HibernateUtil;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -149,10 +149,10 @@ public class MatchRepository {
 
         } catch (ConstraintViolationException e) {
 
-            // TODO: При любой ошибке `ConstraintViolationException` выбрасывается исключение new AlreadyExistException("Match already exists").
+            // TODO: При любой ошибке `ConstraintViolationException` выбрасывается исключение new EntityAlreadyExistException("Match already exists").
                 // Но `ConstraintViolationException` не всегда означает конфликт уникальности, поэтому стоит выбрасывать более общее исключение,
                 // а также добавить в него конструктор, который будет принимать исходное исключение, чтобы сохранить всю цепочку и упростить отладку.
-            throw new AlreadyExistException("Match already exists");
+            throw new EntityAlreadyExistException("Match already exists");
         }
     }
 }
