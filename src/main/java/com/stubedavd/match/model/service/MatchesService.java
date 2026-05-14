@@ -26,18 +26,18 @@ public class MatchesService {
 
     public long getTotalCount() {
 
-        return matchRepository.findTotalCount();
+        return matchRepository.count();
     }
 
     public long getTotalCount(String playerName) {
 
-        return matchRepository.findCountByName(playerName);
+        return matchRepository.countByPlayerName(playerName);
     }
 
     public List<MatchResponseDto> getPage(int pageNumber, int pageSize) {
 
         return matchRepository
-                .findPage(pageNumber, pageSize)
+                .findAll(pageNumber, pageSize)
                 .stream()
 
                 // Метод, принимающий List<Match> и возвращающий List<MatchResponseDto> можно добавить в MatchMapper и перенести эту логику в него.
@@ -52,7 +52,7 @@ public class MatchesService {
     public List<MatchResponseDto> getPage(String playerName, int pageNumber, int pageSize) {
 
         return matchRepository
-                .findByPlayerName(playerName, pageNumber, pageSize)
+                .findAllByPlayerName(playerName, pageNumber, pageSize)
                 .stream()
 
                 // Метод, принимающий List<Match> и возвращающий List<MatchResponseDto> можно добавить в MatchMapper и перенести эту логику в него.

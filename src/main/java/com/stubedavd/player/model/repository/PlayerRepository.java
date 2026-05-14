@@ -18,6 +18,9 @@ public class PlayerRepository {
                 WHERE name = :name
             """;
     private static final String NAME_PARAMETER = "name";
+    private static final String NAME_ALREADY_EXISTS = "Player with name already exists";
+    private static final String ERROR_WHILE_SAVING_PLAYER = "Error while saving player: ";
+    private static final String ERROR_WHILE_FINDING_PLAYER_BY_NAME = "Error while finding player by name: ";
 
     // TODO: Класс использует `sessionFactory.openSession()` для получения сессии. Это ведёт к антипаттерну "Session-per-Operation" ("сессия на операцию")
         // (см. файл "repository.md" в этом же пакете)
@@ -43,11 +46,11 @@ public class PlayerRepository {
             Throwable cause = e.getCause();
             if (cause instanceof ConstraintViolationException) {
                 String exceptionMessage = e.getMessage();
-                if (exceptionMessage != null && exceptionMessage.toLowerCase().contains("name")) {
-                    throw new EntityAlreadyExistException("Player with name '" + player.getName() + "' already exists", e);
+                if (exceptionMessage != null && exceptionMessage.toLowerCase().contains(NAME_PARAMETER)) {
+                    throw new EntityAlreadyExistException(NAME_ALREADY_EXISTS, e);
                 }
             }
-            throw new DatabaseException("Error while saving player: " + player.getName(), e);
+            throw new DatabaseException(ERROR_WHILE_SAVING_PLAYER + player.getName(), e);
         }
     }
 
@@ -57,7 +60,7 @@ public class PlayerRepository {
                     .setParameter(NAME_PARAMETER, name)
                     .uniqueResultOptional();
         } catch (Exception e) {
-            throw new DatabaseException("Error while finding player by name: " + name, e);
+            throw new DatabaseException(ERROR_WHILE_FINDING_PLAYER_BY_NAME + name, e);
         }
     }
 }
