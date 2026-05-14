@@ -5,7 +5,6 @@ import com.stubedavd.match.model.entity.Match;
 import com.stubedavd.exception.EntityAlreadyExistException;
 import com.stubedavd.util.HibernateUtil;
 import jakarta.persistence.PersistenceException;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
