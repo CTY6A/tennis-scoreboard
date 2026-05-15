@@ -1,13 +1,13 @@
 package com.stubedavd.match.controller;
 
 import com.stubedavd.match.model.domain.score.value.RegularGameScoreValue;
+import com.stubedavd.match.model.service.impl.OngoingMatchServiceImpl;
 import com.stubedavd.player.model.domain.PlayerDomain;
 import com.stubedavd.exception.NotFoundException;
 import com.stubedavd.listener.ContextListener;
 import com.stubedavd.match.model.domain.MatchScoreModel;
 import com.stubedavd.match.model.service.FinishedMatchesPersistenceService;
 import com.stubedavd.match.model.service.MatchScoreCalculationService;
-import com.stubedavd.match.model.service.OngoingMatchService;
 import com.stubedavd.util.Validator;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -39,7 +39,7 @@ public class MatchScoreController extends HttpServlet {
     public static final String MATCH_SCORE_JSP = "/WEB-INF/jsp/match-score.jsp";
     public static final String FINAL_MATCH_SCORE_JSP = "/WEB-INF/jsp/final-match-score.jsp";
 
-    private OngoingMatchService ongoingMatchService;
+    private OngoingMatchServiceImpl ongoingMatchService;
     private MatchScoreCalculationService matchScoreCalculationService;
     private FinishedMatchesPersistenceService finishedMatchesPersistenceService;
 
@@ -51,7 +51,7 @@ public class MatchScoreController extends HttpServlet {
         super.init(config);
 
         ongoingMatchService =
-                (OngoingMatchService) config.getServletContext().getAttribute(ContextListener.ONGOING_MATCH_SERVICE);
+                (OngoingMatchServiceImpl) config.getServletContext().getAttribute(ContextListener.ONGOING_MATCH_SERVICE);
 
         if (ongoingMatchService == null) {
             throw new NotFoundException("Ongoing Match service not found");

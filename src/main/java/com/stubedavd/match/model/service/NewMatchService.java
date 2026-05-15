@@ -2,6 +2,7 @@ package com.stubedavd.match.model.service;
 
 import com.stubedavd.match.mapper.MatchScoreModelMapper;
 import com.stubedavd.match.model.domain.MatchScoreModel;
+import com.stubedavd.match.model.service.impl.OngoingMatchServiceImpl;
 import com.stubedavd.player.model.domain.PlayerDomain;
 import com.stubedavd.player.model.dto.request.PlayerRequestDto;
 import com.stubedavd.player.model.entity.Player;
@@ -18,7 +19,7 @@ public class NewMatchService {
         // При этом он способствует смешению слоёв — сам использует зависимость от DAO и передаёт JPA Entity в доменную модель.
         // (см. файл "Принцип разделения ответственности (Separation of Concerns).md" в этом же пакете)
         // Этому классу должна быть не нужна зависимость PlayerRepositoryImpl.
-        // А также создание нового матча можно перенести в OngoingMatchService и удалить этот сервис.
+        // А также создание нового матча можно перенести в OngoingMatchServiceImpl и удалить этот сервис.
 
     private final OngoingMatchService ongoingMatchService;
 
