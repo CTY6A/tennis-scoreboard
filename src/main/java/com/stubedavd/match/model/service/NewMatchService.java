@@ -2,7 +2,6 @@ package com.stubedavd.match.model.service;
 
 import com.stubedavd.match.mapper.MatchScoreModelMapper;
 import com.stubedavd.match.model.domain.MatchScoreModel;
-import com.stubedavd.match.model.service.impl.OngoingMatchServiceImpl;
 import com.stubedavd.player.model.domain.PlayerDomain;
 import com.stubedavd.player.model.dto.request.PlayerRequestDto;
 import com.stubedavd.player.model.entity.Player;
