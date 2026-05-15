@@ -1,12 +1,11 @@
 package com.stubedavd.player.model.repository;
 
-import com.stubedavd.player.model.entity.Player;
-import com.stubedavd.exception.EntityAlreadyExistException;
 import com.stubedavd.exception.DatabaseException;
+import com.stubedavd.exception.EntityAlreadyExistException;
+import com.stubedavd.player.model.entity.Player;
 import jakarta.persistence.PersistenceException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 
 import java.util.Optional;
@@ -22,9 +21,6 @@ public class PlayerRepository {
     private static final String ERROR_WHILE_SAVING_PLAYER = "Error while saving player: ";
     private static final String ERROR_WHILE_FINDING_PLAYER_BY_NAME = "Error while finding player by name: ";
 
-    // TODO: Класс использует `sessionFactory.openSession()` для получения сессии. Это ведёт к антипаттерну "Session-per-Operation" ("сессия на операцию")
-        // (см. файл "repository.md" в этом же пакете)
-
     private final SessionFactory sessionFactory;
 
     public PlayerRepository(SessionFactory sessionFactory) {
@@ -32,16 +28,10 @@ public class PlayerRepository {
     }
 
     public Player save(Player player) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            try {
-                session.persist(player);
-                transaction.commit();
-                return player;
-            } catch (Exception e) {
-                transaction.rollback();
-                throw e;
-            }
+        try {
+            Session session = sessionFactory.getCurrentSession();
+            session.persist(player);
+            return player;
         } catch (PersistenceException e) {
             Throwable cause = e.getCause();
             if (cause instanceof ConstraintViolationException) {
@@ -55,7 +45,8 @@ public class PlayerRepository {
     }
 
     public Optional<Player> findByName(String name) {
-        try (Session session = sessionFactory.openSession()) {
+        try {
+            Session session = sessionFactory.getCurrentSession();
             return session.createQuery(FIND_BY_NAME_HQL, Player.class)
                     .setParameter(NAME_PARAMETER, name)
                     .uniqueResultOptional();
