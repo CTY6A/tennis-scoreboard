@@ -7,6 +7,7 @@ import com.stubedavd.player.model.dto.request.PlayerRequestDto;
 import com.stubedavd.player.model.entity.Player;
 import com.stubedavd.player.mapper.PlayerMapper;
 import com.stubedavd.player.model.repository.PlayerRepository;
+import com.stubedavd.player.model.repository.impl.PlayerRepositoryImpl;
 
 import java.util.UUID;
 
@@ -17,7 +18,7 @@ public class NewMatchService {
     // TODO: Класс отвечает за создание объекта текущего матча (доменной модели).
         // При этом он способствует смешению слоёв — сам использует зависимость от DAO и передаёт JPA Entity в доменную модель.
         // (см. файл "Принцип разделения ответственности (Separation of Concerns).md" в этом же пакете)
-        // Этому классу должна быть не нужна зависимость PlayerRepository.
+        // Этому классу должна быть не нужна зависимость PlayerRepositoryImpl.
         // А также создание нового матча можно перенести в OngoingMatchService и удалить этот сервис.
 
     private final OngoingMatchService ongoingMatchService;

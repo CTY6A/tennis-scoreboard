@@ -4,8 +4,8 @@ import com.stubedavd.match.model.entity.Match;
 import com.stubedavd.match.mapper.MatchMapper;
 import com.stubedavd.match.model.domain.MatchScoreModel;
 import com.stubedavd.match.model.repository.MatchRepository;
+import com.stubedavd.match.model.repository.impl.MatchRepositoryImpl;
 import com.stubedavd.player.mapper.PlayerMapper;
-import com.stubedavd.player.model.domain.PlayerDomain;
 import com.stubedavd.player.model.entity.Player;
 
 public class FinishedMatchesPersistenceService {
