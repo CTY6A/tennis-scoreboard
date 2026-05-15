@@ -7,7 +7,6 @@ import com.stubedavd.player.model.dto.request.PlayerRequestDto;
 import com.stubedavd.player.model.entity.Player;
 import com.stubedavd.player.mapper.PlayerMapper;
 import com.stubedavd.player.model.repository.PlayerRepository;
-import com.stubedavd.player.model.repository.impl.PlayerRepositoryImpl;
 
 import java.util.UUID;
 

@@ -3,7 +3,6 @@ package com.stubedavd.match.model.service;
 import com.stubedavd.match.model.dto.response.MatchResponseDto;
 import com.stubedavd.match.mapper.MatchMapper;
 import com.stubedavd.match.model.repository.MatchRepository;
-import com.stubedavd.match.model.repository.impl.MatchRepositoryImpl;
 
 import java.util.List;
 
