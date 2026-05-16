@@ -1,7 +1,6 @@
 package com.stubedavd.player.mapper;
 
 import com.stubedavd.player.model.domain.PlayerDomain;
-import com.stubedavd.player.model.dto.request.PlayerRequestDto;
 import com.stubedavd.player.model.dto.response.PlayerResponseDto;
 import com.stubedavd.player.model.entity.Player;
 import org.mapstruct.Mapper;
@@ -14,10 +13,8 @@ public interface PlayerMapper {
 
     PlayerMapper INSTANCE = Mappers.getMapper(PlayerMapper.class);
 
-    PlayerRequestDto toRequestDto(String name);
-
     @Mapping(target = "id", ignore = true)
-    Player toEntity(PlayerRequestDto playerRequestDto);
+    Player toEntity(String playerName);
 
     Player toEntity(PlayerDomain playerDomain);
 
@@ -26,8 +23,8 @@ public interface PlayerMapper {
     PlayerResponseDto toResponseDto(Player player);
 
     @ObjectFactory
-    default Player createPlayerFromRequestDto(PlayerRequestDto dto) {
-        return new Player(dto.name());
+    default Player createPlayerFromRequestDto(String name) {
+        return new Player(name);
     }
 
     @ObjectFactory

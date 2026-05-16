@@ -25,7 +25,6 @@ public class ContextListener implements ServletContextListener {
     public static final String MATCH_REPOSITORY = "matchRepository";
 
     public static final String ONGOING_MATCH_SERVICE = "ongoingMatchService";
-    public static final String NEW_MATCH_SERVICE = "newMatchService";
     public static final String MATCH_SCORE_CALCULATION_SERVICE = "matchScoreCalculationService";
     public static final String MATCHES_SERVICE = "matchesService";
     public static final String FINISHED_MATCHES_PERSISTENCE_SERVICE = "finishedMatchesPersistenceService";
@@ -45,13 +44,7 @@ public class ContextListener implements ServletContextListener {
         PlayerRepository playerRepository = new PlayerRepositoryImpl(HibernateUtil.getSessionFactory());
         MatchRepository matchRepository = new MatchRepositoryImpl();
 
-        OngoingMatchService ongoingMatchService = new OngoingMatchServiceImpl();
-        NewMatchService newMatchService = new NewMatchService(
-                ongoingMatchService,
-                playerMapper,
-                matchScoreModelMapper,
-                playerRepository
-        );
+        OngoingMatchService ongoingMatchService = new OngoingMatchServiceImpl(matchScoreModelMapper);
         MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService();
         MatchesService matchesService = new MatchesService(matchMapper, matchRepository);
         FinishedMatchesPersistenceService finishedMatchesPersistenceService =
@@ -64,7 +57,6 @@ public class ContextListener implements ServletContextListener {
         servletContext.setAttribute(MATCH_MAPPER, matchMapper);
 
         servletContext.setAttribute(ONGOING_MATCH_SERVICE, ongoingMatchService);
-        servletContext.setAttribute(NEW_MATCH_SERVICE, newMatchService);
         servletContext.setAttribute(MATCH_SCORE_CALCULATION_SERVICE, matchScoreCalculationService);
         servletContext.setAttribute(MATCHES_SERVICE, matchesService);
         servletContext.setAttribute(FINISHED_MATCHES_PERSISTENCE_SERVICE, finishedMatchesPersistenceService);

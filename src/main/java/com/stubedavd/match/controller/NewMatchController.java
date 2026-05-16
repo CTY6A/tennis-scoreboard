@@ -1,11 +1,14 @@
 package com.stubedavd.match.controller;
 
-import com.stubedavd.player.model.dto.request.PlayerRequestDto;
+import com.stubedavd.match.mapper.MatchMapper;
 import com.stubedavd.exception.NotFoundException;
 import com.stubedavd.exception.ValidationException;
 import com.stubedavd.listener.ContextListener;
+import com.stubedavd.match.model.service.OngoingMatchService;
 import com.stubedavd.player.mapper.PlayerMapper;
-import com.stubedavd.match.model.service.NewMatchService;
+import com.stubedavd.player.model.domain.PlayerDomain;
+import com.stubedavd.player.model.entity.Player;
+import com.stubedavd.player.model.repository.PlayerRepository;
 import com.stubedavd.util.Validator;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -40,9 +43,12 @@ public class NewMatchController extends HttpServlet {
 
     public static final String JSP = "/WEB-INF/jsp/new-match.jsp";
 
-    private NewMatchService newMatchService;
+    private OngoingMatchService ongoingMatchService;
 
     private PlayerMapper playerMapper;
+    private MatchMapper matchMapper;
+
+    private PlayerRepository playerRepository;
 
     // Для получения объектов из контекста можно использовать "естественные константы" — Service.class.getSimpleName() или Service.class.getName()
     // Логику получения бина и проверку его на null можно вынести в базовый контроллер в специальный метод, чтобы она не повторялась по нескольку раз в каждом сервлете.
@@ -51,12 +57,12 @@ public class NewMatchController extends HttpServlet {
 
         super.init(config);
 
-        newMatchService =
-                (NewMatchService) config.getServletContext().getAttribute(ContextListener.NEW_MATCH_SERVICE);
+        ongoingMatchService =
+                (OngoingMatchService) config.getServletContext().getAttribute(ContextListener.ONGOING_MATCH_SERVICE);
 
-        if (newMatchService == null) {
+        if (ongoingMatchService == null) {
 
-            throw new NotFoundException("New match service not found");
+            throw new NotFoundException("Ongoing match service not found");
         }
 
         playerMapper =
@@ -65,6 +71,20 @@ public class NewMatchController extends HttpServlet {
         if (playerMapper == null) {
 
             throw new NotFoundException("Player mapper not found");
+        }
+
+        matchMapper =
+                (MatchMapper) config.getServletContext().getAttribute(ContextListener.MATCH_MAPPER);
+
+        if (matchMapper == null) {
+            throw new NotFoundException("Match mapper not found");
+        }
+
+        playerRepository =
+                (PlayerRepository) config.getServletContext().getAttribute(ContextListener.PLAYER_REPOSITORY);
+
+        if (playerRepository == null) {
+            throw new NotFoundException("Player repository not found");
         }
     }
 
@@ -103,10 +123,19 @@ public class NewMatchController extends HttpServlet {
         player1Name = player1Name.trim();
         player2Name = player2Name.trim();
 
-        PlayerRequestDto player1 = playerMapper.toRequestDto(player1Name);
-        PlayerRequestDto player2 = playerMapper.toRequestDto(player2Name);
+        String finalPlayer1Name = player1Name;
+        String finalPlayer2Name = player2Name;
 
-        UUID matchId = newMatchService.newMatch(player1, player2);
+        Player player1 = playerRepository.findByName(player1Name)
+                .orElseGet(() -> playerRepository.save(playerMapper.toEntity(finalPlayer1Name)));
+
+        Player player2 = playerRepository.findByName(player2Name)
+                .orElseGet(() -> playerRepository.save(playerMapper.toEntity(finalPlayer2Name)));
+
+        PlayerDomain player1Domain = playerMapper.toDomain(player1);
+        PlayerDomain player2Domain = playerMapper.toDomain(player2);
+
+        UUID matchId = ongoingMatchService.save(player1Domain, player2Domain);
 
         response.sendRedirect(request.getContextPath() + "/match-score?uuid=" + matchId);
     }
