@@ -1,6 +1,5 @@
 package com.stubedavd.match.controller;
 
-import com.stubedavd.match.mapper.MatchMapper;
 import com.stubedavd.exception.NotFoundException;
 import com.stubedavd.exception.ValidationException;
 import com.stubedavd.listener.ContextListener;
