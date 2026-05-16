@@ -46,7 +46,6 @@ public class NewMatchController extends HttpServlet {
     private OngoingMatchService ongoingMatchService;
 
     private PlayerMapper playerMapper;
-    private MatchMapper matchMapper;
 
     private PlayerRepository playerRepository;
 
@@ -71,13 +70,6 @@ public class NewMatchController extends HttpServlet {
         if (playerMapper == null) {
 
             throw new NotFoundException("Player mapper not found");
-        }
-
-        matchMapper =
-                (MatchMapper) config.getServletContext().getAttribute(ContextListener.MATCH_MAPPER);
-
-        if (matchMapper == null) {
-            throw new NotFoundException("Match mapper not found");
         }
 
         playerRepository =

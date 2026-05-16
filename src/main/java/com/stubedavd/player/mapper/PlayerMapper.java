@@ -1,7 +1,6 @@
 package com.stubedavd.player.mapper;
 
 import com.stubedavd.player.model.domain.PlayerDomain;
-import com.stubedavd.player.model.dto.response.PlayerResponseDto;
 import com.stubedavd.player.model.entity.Player;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -19,8 +18,6 @@ public interface PlayerMapper {
     Player toEntity(PlayerDomain playerDomain);
 
     PlayerDomain toDomain(Player player);
-
-    PlayerResponseDto toResponseDto(Player player);
 
     @ObjectFactory
     default Player createPlayerFromRequestDto(String name) {

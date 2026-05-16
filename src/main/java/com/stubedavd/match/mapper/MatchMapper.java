@@ -1,6 +1,5 @@
 package com.stubedavd.match.mapper;
 
-import com.stubedavd.match.model.dto.request.MatchRequestDto;
 import com.stubedavd.match.model.dto.response.MatchResponseDto;
 import com.stubedavd.match.model.entity.Match;
 import com.stubedavd.player.model.entity.Player;
@@ -13,8 +12,6 @@ import org.mapstruct.factory.Mappers;
 public interface MatchMapper {
 
     MatchMapper INSTANCE = Mappers.getMapper(MatchMapper.class);
-
-    MatchRequestDto toRequestDto(String player1Name, String player2Name);
 
     @Mapping(target = "id", ignore = true)
     Match toEntity(Player player1, Player player2, Player winner);
