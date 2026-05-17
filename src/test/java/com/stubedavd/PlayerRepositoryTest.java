@@ -1,9 +1,9 @@
 package com.stubedavd;
 
-import com.stubedavd.player.model.entity.Player;
+import com.stubedavd.model.player.entity.Player;
 import com.stubedavd.exception.EntityAlreadyExistException;
-import com.stubedavd.player.model.repository.PlayerRepository;
-import com.stubedavd.player.model.repository.impl.PlayerRepositoryImpl;
+import com.stubedavd.model.player.repository.PlayerRepository;
+import com.stubedavd.model.player.repository.impl.PlayerRepositoryImpl;
 import com.stubedavd.util.HibernateUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

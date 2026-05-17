@@ -1,7 +1,7 @@
 package com.stubedavd.util;
 
 import com.stubedavd.exception.ValidationException;
-import com.stubedavd.player.model.entity.Player;
+import com.stubedavd.model.player.entity.Player;
 import lombok.experimental.UtilityClass;
 
 import java.util.UUID;

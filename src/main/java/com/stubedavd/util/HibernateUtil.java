@@ -1,7 +1,7 @@
 package com.stubedavd.util;
 
-import com.stubedavd.match.model.entity.Match;
-import com.stubedavd.player.model.entity.Player;
+import com.stubedavd.model.match.entity.Match;
+import com.stubedavd.model.player.entity.Player;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import com.stubedavd.exception.DatabaseException;

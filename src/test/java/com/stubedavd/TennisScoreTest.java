@@ -1,12 +1,12 @@
 package com.stubedavd;
 
-import com.stubedavd.match.mapper.MatchScoreModelMapper;
-import com.stubedavd.match.model.domain.score.value.RegularGameScoreValue;
-import com.stubedavd.match.model.service.MatchScoreCalculationService;
-import com.stubedavd.player.model.domain.PlayerDomain;
+import com.stubedavd.mapper.match.MatchScoreModelMapper;
+import com.stubedavd.model.match.domain.score.value.RegularGameScoreValue;
+import com.stubedavd.model.match.service.MatchScoreCalculationService;
+import com.stubedavd.model.player.domain.PlayerDomain;
 import com.stubedavd.exception.BusinessException;
-import com.stubedavd.match.model.domain.MatchScoreModel;
-import com.stubedavd.match.model.service.impl.MatchScoreCalculationServiceImpl;
+import com.stubedavd.model.match.domain.MatchScoreModel;
+import com.stubedavd.model.match.service.impl.MatchScoreCalculationServiceImpl;
 import org.junit.jupiter.api.*;
 
 public class TennisScoreTest {
