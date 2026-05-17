@@ -56,7 +56,9 @@ public class NewMatchController extends HttpServlet {
         super.init(config);
 
         ongoingMatchService =
-                (OngoingMatchService) config.getServletContext().getAttribute(ContextListener.ONGOING_MATCH_SERVICE);
+                (OngoingMatchService) config
+                        .getServletContext()
+                        .getAttribute(OngoingMatchService.class.getSimpleName());
 
         if (ongoingMatchService == null) {
 
@@ -64,7 +66,7 @@ public class NewMatchController extends HttpServlet {
         }
 
         playerMapper =
-                (PlayerMapper) config.getServletContext().getAttribute(ContextListener.PLAYER_MAPPER);
+                (PlayerMapper) config.getServletContext().getAttribute(PlayerMapper.class.getSimpleName());
 
         if (playerMapper == null) {
 
@@ -72,7 +74,7 @@ public class NewMatchController extends HttpServlet {
         }
 
         playerRepository =
-                (PlayerRepository) config.getServletContext().getAttribute(ContextListener.PLAYER_REPOSITORY);
+                (PlayerRepository) config.getServletContext().getAttribute(PlayerRepository.class.getSimpleName());
 
         if (playerRepository == null) {
             throw new NotFoundException("Player repository not found");

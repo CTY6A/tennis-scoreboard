@@ -51,7 +51,9 @@ public class MatchScoreController extends HttpServlet {
         super.init(config);
 
         ongoingMatchService =
-                (OngoingMatchService) config.getServletContext().getAttribute(ContextListener.ONGOING_MATCH_SERVICE);
+                (OngoingMatchService) config
+                        .getServletContext()
+                        .getAttribute(OngoingMatchService.class.getSimpleName());
 
         if (ongoingMatchService == null) {
             throw new NotFoundException("Ongoing Match service not found");
@@ -60,7 +62,7 @@ public class MatchScoreController extends HttpServlet {
         matchScoreCalculationService =
                 (MatchScoreCalculationService) config
                         .getServletContext()
-                        .getAttribute(ContextListener.MATCH_SCORE_CALCULATION_SERVICE);
+                        .getAttribute(MatchScoreCalculationService.class.getSimpleName());
 
         if (matchScoreCalculationService == null) {
             throw new NotFoundException("Match score calculation service not found");
@@ -69,7 +71,7 @@ public class MatchScoreController extends HttpServlet {
         finishedMatchesPersistenceService =
                 (FinishedMatchesPersistenceService) config
                         .getServletContext()
-                        .getAttribute(ContextListener.FINISHED_MATCHES_PERSISTENCE_SERVICE);
+                        .getAttribute(FinishedMatchesPersistenceService.class.getSimpleName());
 
         if (finishedMatchesPersistenceService == null) {
             throw new NotFoundException("Finished Matches persistence service not found");

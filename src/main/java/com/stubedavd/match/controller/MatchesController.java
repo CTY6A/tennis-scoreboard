@@ -43,7 +43,7 @@ public class MatchesController extends HttpServlet {
         super.init(config);
 
         matchesService =
-                (MatchesService) config.getServletContext().getAttribute(ContextListener.MATCHES_SERVICE);
+                (MatchesService) config.getServletContext().getAttribute(MatchesService.class.getSimpleName());
 
         if (matchesService == null) {
             throw new NotFoundException("Matches service not found");

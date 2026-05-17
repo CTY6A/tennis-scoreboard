@@ -20,19 +20,6 @@ import jakarta.servlet.annotation.WebListener;
 
 @WebListener
 public class ContextListener implements ServletContextListener {
-
-    public static final String PLAYER_MAPPER = "playerMapper";
-    public static final String MATCH_MAPPER = "matchMapper";
-
-    public static final String PLAYER_REPOSITORY = "playerRepository";
-    public static final String MATCH_REPOSITORY = "matchRepository";
-
-    public static final String ONGOING_MATCH_SERVICE = "ongoingMatchService";
-    public static final String MATCH_SCORE_CALCULATION_SERVICE = "matchScoreCalculationService";
-    public static final String MATCHES_SERVICE = "matchesService";
-    public static final String FINISHED_MATCHES_PERSISTENCE_SERVICE = "finishedMatchesPersistenceService";
-
-    // Для помещения объектов в контекст можно использовать "естественные константы" — Bean.class.getSimpleName() или Bean.class.getName()
     @Override
     public void contextInitialized(ServletContextEvent sce) {
 
@@ -53,16 +40,19 @@ public class ContextListener implements ServletContextListener {
         FinishedMatchesPersistenceService finishedMatchesPersistenceService =
                 new FinishedMatchesPersistenceServiceImpl(playerMapper, matchMapper, matchRepository);
 
-        servletContext.setAttribute(PLAYER_REPOSITORY, playerRepository);
-        servletContext.setAttribute(MATCH_REPOSITORY, matchRepository);
+        servletContext.setAttribute(PlayerRepository.class.getSimpleName(), playerRepository);
+        servletContext.setAttribute(MatchRepository.class.getSimpleName(), matchRepository);
 
-        servletContext.setAttribute(PLAYER_MAPPER, playerMapper);
-        servletContext.setAttribute(MATCH_MAPPER, matchMapper);
+        servletContext.setAttribute(PlayerMapper.class.getSimpleName(), playerMapper);
+        servletContext.setAttribute(MatchMapper.class.getSimpleName(), matchMapper);
 
-        servletContext.setAttribute(ONGOING_MATCH_SERVICE, ongoingMatchService);
-        servletContext.setAttribute(MATCH_SCORE_CALCULATION_SERVICE, matchScoreCalculationService);
-        servletContext.setAttribute(MATCHES_SERVICE, matchesService);
-        servletContext.setAttribute(FINISHED_MATCHES_PERSISTENCE_SERVICE, finishedMatchesPersistenceService);
+        servletContext.setAttribute(OngoingMatchService.class.getSimpleName(), ongoingMatchService);
+        servletContext.setAttribute(MatchScoreCalculationService.class.getSimpleName(), matchScoreCalculationService);
+        servletContext.setAttribute(MatchesService.class.getSimpleName(), matchesService);
+        servletContext.setAttribute(
+                FinishedMatchesPersistenceService.class.getSimpleName(),
+                finishedMatchesPersistenceService
+        );
     }
 
     @Override
