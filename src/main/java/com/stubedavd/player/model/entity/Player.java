@@ -12,6 +12,8 @@ import lombok.*;
 @Getter
 public class Player {
 
+    public static final int NAME_MAX_LENGTH = 23;
+
     public Player(String name) {
         this.name = name;
     }
@@ -20,6 +22,6 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, length = 23)
+    @Column(unique = true, length = NAME_MAX_LENGTH)
     private String name;
 }
