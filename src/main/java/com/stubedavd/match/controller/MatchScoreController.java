@@ -2,12 +2,12 @@ package com.stubedavd.match.controller;
 
 import com.stubedavd.match.model.domain.score.value.RegularGameScoreValue;
 import com.stubedavd.match.model.service.FinishedMatchesPersistenceService;
+import com.stubedavd.match.model.service.MatchScoreCalculationService;
 import com.stubedavd.match.model.service.OngoingMatchService;
 import com.stubedavd.player.model.domain.PlayerDomain;
 import com.stubedavd.exception.NotFoundException;
 import com.stubedavd.listener.ContextListener;
 import com.stubedavd.match.model.domain.MatchScoreModel;
-import com.stubedavd.match.model.service.MatchScoreCalculationService;
 import com.stubedavd.util.Validator;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;

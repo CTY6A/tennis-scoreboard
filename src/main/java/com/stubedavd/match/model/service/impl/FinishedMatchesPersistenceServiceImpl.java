@@ -13,11 +13,9 @@ import lombok.RequiredArgsConstructor;
 public class FinishedMatchesPersistenceServiceImpl implements FinishedMatchesPersistenceService {
     private final PlayerMapper playerMapper;
     private final MatchMapper matchMapper;
-
     private final MatchRepository matchRepository;
 
     public void recordMatch(MatchScoreModel matchScoreModel) {
-
         Player player1 = playerMapper.toEntity(matchScoreModel.getPlayer1());
         Player player2 = playerMapper.toEntity(matchScoreModel.getPlayer2());
         Player winner = playerMapper.toEntity(matchScoreModel.getWinner());

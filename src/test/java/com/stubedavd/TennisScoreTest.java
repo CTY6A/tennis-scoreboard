@@ -2,10 +2,11 @@ package com.stubedavd;
 
 import com.stubedavd.match.mapper.MatchScoreModelMapper;
 import com.stubedavd.match.model.domain.score.value.RegularGameScoreValue;
+import com.stubedavd.match.model.service.MatchScoreCalculationService;
 import com.stubedavd.player.model.domain.PlayerDomain;
 import com.stubedavd.exception.BusinessException;
 import com.stubedavd.match.model.domain.MatchScoreModel;
-import com.stubedavd.match.model.service.MatchScoreCalculationService;
+import com.stubedavd.match.model.service.impl.MatchScoreCalculationServiceImpl;
 import org.junit.jupiter.api.*;
 
 public class TennisScoreTest {
@@ -24,7 +25,7 @@ public class TennisScoreTest {
     @BeforeEach
     void setUpBeforeClass() {
 
-        matchScoreCalculationService = new MatchScoreCalculationService();
+        matchScoreCalculationService = new MatchScoreCalculationServiceImpl();
         MatchScoreModelMapper matchScoreModelMapper = MatchScoreModelMapper.INSTANCE;
 
         player1 = new PlayerDomain(0L, "Nadal");

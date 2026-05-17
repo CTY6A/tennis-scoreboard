@@ -5,6 +5,8 @@ import com.stubedavd.match.mapper.MatchScoreModelMapper;
 import com.stubedavd.match.model.repository.MatchRepository;
 import com.stubedavd.match.model.service.*;
 import com.stubedavd.match.model.service.impl.FinishedMatchesPersistenceServiceImpl;
+import com.stubedavd.match.model.service.impl.MatchScoreCalculationServiceImpl;
+import com.stubedavd.match.model.service.impl.MatchesServiceImpl;
 import com.stubedavd.match.model.service.impl.OngoingMatchServiceImpl;
 import com.stubedavd.player.mapper.PlayerMapper;
 import com.stubedavd.match.model.repository.impl.MatchRepositoryImpl;
@@ -46,8 +48,8 @@ public class ContextListener implements ServletContextListener {
         MatchRepository matchRepository = new MatchRepositoryImpl();
 
         OngoingMatchService ongoingMatchService = new OngoingMatchServiceImpl(matchScoreModelMapper);
-        MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService();
-        MatchesService matchesService = new MatchesService(matchMapper, matchRepository);
+        MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationServiceImpl();
+        MatchesService matchesService = new MatchesServiceImpl(matchMapper, matchRepository);
         FinishedMatchesPersistenceService finishedMatchesPersistenceService =
                 new FinishedMatchesPersistenceServiceImpl(playerMapper, matchMapper, matchRepository);
 

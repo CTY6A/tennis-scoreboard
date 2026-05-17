@@ -1,22 +1,9 @@
 package com.stubedavd.match.model.service;
 
-import com.stubedavd.player.model.domain.PlayerDomain;
-import com.stubedavd.exception.BusinessException;
 import com.stubedavd.match.model.domain.MatchScoreModel;
+import com.stubedavd.player.model.domain.PlayerDomain;
 
-public class MatchScoreCalculationService {
-
-    public boolean isMatchFinished(MatchScoreModel matchScoreModel) {
-        return matchScoreModel.getMatchScore().isRoundFinished();
-    }
-
-    public void pointWon(MatchScoreModel matchScoreModel, PlayerDomain player) {
-
-        if (isMatchFinished(matchScoreModel)) {
-
-            throw new BusinessException("Match already finished");
-        }
-
-        matchScoreModel.pointWon(player);
-    }
+public interface MatchScoreCalculationService {
+    boolean isMatchFinished(MatchScoreModel matchScoreModel);
+    void pointWon(MatchScoreModel matchScoreModel, PlayerDomain player);
 }
