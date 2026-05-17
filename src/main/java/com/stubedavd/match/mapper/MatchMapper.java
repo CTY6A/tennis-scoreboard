@@ -8,6 +8,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper
 public interface MatchMapper {
 
@@ -16,7 +18,18 @@ public interface MatchMapper {
     @Mapping(target = "id", ignore = true)
     Match toEntity(Player player1, Player player2, Player winner);
 
-    MatchResponseDto toResponseDto(String player1Name, String player2Name, String winnerName);
+    MatchResponseDto toResponseDto(Match match);
+
+    List<MatchResponseDto> toResponseDtoList(List<Match> matches);
+
+    @ObjectFactory
+    default MatchResponseDto createResponseDto (Match match) {
+        return new MatchResponseDto(
+                match.getPlayer1().getName(),
+                match.getPlayer2().getName(),
+                match.getWinner().getName()
+        );
+    }
 
     @ObjectFactory
     default Match createMatch(Player player1, Player player2, Player winner) {
