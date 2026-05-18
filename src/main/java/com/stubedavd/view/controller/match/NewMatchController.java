@@ -19,11 +19,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @WebServlet("/new-match")
-public class NewMatchController extends HttpServlet {
-
-    // Все повторяющиеся или важные строковые литералы лучше вынести в `private static final` константы с понятными именами.
-        // Именованная константа делает код более семантически понятным.
-
+public class NewMatchController extends BaseController {
     // TODO: Сервлет отправляет сообщение из исключения (`e.getMessage()`) напрямую пользователю для `ValidationException`.
         // Сообщения об ошибках из исключений могут содержать технические детали, которые не предназначены
         // для конечного пользователя и могут представлять угрозу безопасности. Например, сообщение может быть
@@ -39,7 +35,11 @@ public class NewMatchController extends HttpServlet {
         //
         // Это повысит безопасность приложения и улучшит пользовательский опыт при возникновении ошибок.
 
-    public static final String JSP = "/WEB-INF/jsp/new-match.jsp";
+    private static final String JSP = "/WEB-INF/jsp/new-match.jsp";
+    private static final String PLAYER_1_NAME = "player1Name";
+    private static final String PLAYER_2_NAME = "player2Name";
+    private static final String ERROR_MESSAGE = "errorMessage";
+    private static final String MATCH_SCORE_UUID = "/match-score?uuid=";
 
     private OngoingMatchService ongoingMatchService;
 
@@ -47,37 +47,13 @@ public class NewMatchController extends HttpServlet {
 
     private PlayerRepository playerRepository;
 
-    // Для получения объектов из контекста можно использовать "естественные константы" — Service.class.getSimpleName() или Service.class.getName()
     // Логику получения бина и проверку его на null можно вынести в базовый контроллер в специальный метод, чтобы она не повторялась по нескольку раз в каждом сервлете.
     @Override
     public void init(ServletConfig config) throws ServletException {
-
         super.init(config);
-
-        ongoingMatchService =
-                (OngoingMatchService) config
-                        .getServletContext()
-                        .getAttribute(OngoingMatchService.class.getSimpleName());
-
-        if (ongoingMatchService == null) {
-
-            throw new NotFoundException("Ongoing match service not found");
-        }
-
-        playerMapper =
-                (PlayerMapper) config.getServletContext().getAttribute(PlayerMapper.class.getSimpleName());
-
-        if (playerMapper == null) {
-
-            throw new NotFoundException("Player mapper not found");
-        }
-
-        playerRepository =
-                (PlayerRepository) config.getServletContext().getAttribute(PlayerRepository.class.getSimpleName());
-
-        if (playerRepository == null) {
-            throw new NotFoundException("Player repository not found");
-        }
+        ongoingMatchService = getOngoingMatchService(config);
+        playerMapper = getPlayerMapper(config);
+        playerRepository = getPlayerRepository(config);
     }
 
     @Override
@@ -91,8 +67,8 @@ public class NewMatchController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
 
-        String player1Name = request.getParameter("player1Name");
-        String player2Name = request.getParameter("player2Name");
+        String player1Name = request.getParameter(PLAYER_1_NAME);
+        String player2Name = request.getParameter(PLAYER_2_NAME);
 
         try {
 
@@ -104,10 +80,10 @@ public class NewMatchController extends HttpServlet {
         } catch (ValidationException e) {
 
             // TODO: Не стоит отправлять сообщение из исключения (e.getMessage()) напрямую во View
-            request.setAttribute("errorMessage", e.getMessage());
+            request.setAttribute(ERROR_MESSAGE, e.getMessage());
 
-            request.setAttribute("player1Name", player1Name);
-            request.setAttribute("player2Name", player2Name);
+            request.setAttribute(PLAYER_1_NAME, player1Name);
+            request.setAttribute(PLAYER_2_NAME, player2Name);
 
             request.getRequestDispatcher(JSP).forward(request, response);
         }
@@ -129,6 +105,6 @@ public class NewMatchController extends HttpServlet {
 
         UUID matchId = ongoingMatchService.save(player1Domain, player2Domain);
 
-        response.sendRedirect(request.getContextPath() + "/match-score?uuid=" + matchId);
+        response.sendRedirect(request.getContextPath() + MATCH_SCORE_UUID + matchId);
     }
 }

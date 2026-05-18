@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @WebServlet("/matches")
-public class MatchesController extends HttpServlet {
+public class MatchesController extends BaseController {
 
     // Все повторяющиеся или важные строковые литералы лучше вынести в `private static final` константы с понятными именами.
         // Именованная константа делает код более семантически понятным.
@@ -38,15 +38,8 @@ public class MatchesController extends HttpServlet {
     // Логику получения бина и проверку его на null можно вынести в базовый контроллер в специальный метод, чтобы она не повторялась по нескольку раз в каждом сервлете.
     @Override
     public void init(ServletConfig config) throws ServletException {
-
         super.init(config);
-
-        matchesService =
-                (MatchesService) config.getServletContext().getAttribute(MatchesService.class.getSimpleName());
-
-        if (matchesService == null) {
-            throw new NotFoundException("Matches service not found");
-        }
+        matchesService = getMatchesService(config);
     }
 
     @Override

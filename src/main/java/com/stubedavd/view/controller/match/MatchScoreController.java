@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @WebServlet("/match-score")
-public class MatchScoreController extends HttpServlet {
+public class MatchScoreController extends BaseController {
 
     // Все повторяющиеся или важные строковые литералы лучше вынести в `private static final` константы с понятными именами.
         // Именованная константа делает код более семантически понятным.
@@ -46,35 +46,10 @@ public class MatchScoreController extends HttpServlet {
     // Логику получения бина и проверку его на null можно вынести в базовый контроллер в специальный метод, чтобы она не повторялась по нескольку раз в каждом сервлете.
     @Override
     public void init(ServletConfig config) throws ServletException {
-
         super.init(config);
-
-        ongoingMatchService =
-                (OngoingMatchService) config
-                        .getServletContext()
-                        .getAttribute(OngoingMatchService.class.getSimpleName());
-
-        if (ongoingMatchService == null) {
-            throw new NotFoundException("Ongoing Match service not found");
-        }
-
-        matchScoreCalculationService =
-                (MatchScoreCalculationService) config
-                        .getServletContext()
-                        .getAttribute(MatchScoreCalculationService.class.getSimpleName());
-
-        if (matchScoreCalculationService == null) {
-            throw new NotFoundException("Match score calculation service not found");
-        }
-
-        finishedMatchesPersistenceService =
-                (FinishedMatchesPersistenceService) config
-                        .getServletContext()
-                        .getAttribute(FinishedMatchesPersistenceService.class.getSimpleName());
-
-        if (finishedMatchesPersistenceService == null) {
-            throw new NotFoundException("Finished Matches persistence service not found");
-        }
+        ongoingMatchService = getOngoingMatchService(config);
+        matchScoreCalculationService = getMatchScoreCalculationService(config);
+        finishedMatchesPersistenceService = getFinishedMatchesPersistenceService(config);
     }
 
     @Override
