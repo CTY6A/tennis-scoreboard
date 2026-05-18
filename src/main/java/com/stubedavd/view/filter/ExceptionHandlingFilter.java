@@ -12,6 +12,7 @@ import java.io.IOException;
 
 @WebFilter("/*")
 public class ExceptionHandlingFilter implements Filter {
+    private static final String UNKNOWN_SERVER_ERROR = "Unknown server error";
 
     // Класс может наследоваться от HttpFilter и переопределять его метод
         // protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain),
@@ -63,7 +64,7 @@ public class ExceptionHandlingFilter implements Filter {
             writeError(httpResponse, HttpServletResponse.SC_NOT_FOUND, e.getMessage());
         } catch (Exception e) {
 
-            writeError(httpResponse, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unknown server error");
+            writeError(httpResponse, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, UNKNOWN_SERVER_ERROR);
         }
     }
 

@@ -1,13 +1,11 @@
 package com.stubedavd.view.controller.match;
 
 import com.stubedavd.model.match.dto.response.MatchResponseDto;
-import com.stubedavd.exception.NotFoundException;
 import com.stubedavd.model.match.service.MatchesService;
 import com.stubedavd.util.Validator;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
