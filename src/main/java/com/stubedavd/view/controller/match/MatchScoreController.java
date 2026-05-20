@@ -3,7 +3,6 @@ package com.stubedavd.view.controller.match;
 import com.stubedavd.model.match.dto.response.FinalScoreResponseDto;
 import com.stubedavd.model.match.dto.response.MatchScoreResponseDto;
 import com.stubedavd.model.match.service.MatchScoreService;
-import com.stubedavd.model.match.service.OngoingMatchService;
 import com.stubedavd.util.Validator;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -16,17 +15,6 @@ import java.util.UUID;
 
 @WebServlet("/match-score")
 public class MatchScoreController extends BaseController {
-    // TODO: Сервлет берёт на себя лишнюю ответственность — оркестрирует взаимодействие между несколькими сервисами и содержит бизнес-логику,
-        // хотя его задача — только принимать HTTP-запросы и делегировать их обработку. Это нарушает принцип единственной ответственности (SRP)
-        // и делает код сервлета более сложным и трудным для тестирования.
-        // Сервлет должен быть "тонким контроллером", делегирующим всю бизнес-логику одному фасадному сервису.
-        // (см. файл "Архитектурный анти-паттерн: "Толстый контроллер" (Fat Controller).md" в этом же пакете)
-
-    // TODO: Сервлет работает с доменной моделью `MatchScoreModel` и получает из неё JPA Entity игроков (`Player`).
-        // Это нарушает границы между слоями приложения и Принцип разделения ответственности
-        // (см. файл "Принцип разделения ответственности (Separation of Concerns).md" в этом же пакете).
-        // Сервлет не должен работать с доменными моделями и JPA сущностями и знать о существовании класса `Player` — ему это не нужно для выполнения его задачи.
-
     private static final String MATCH_SCORE_JSP = "/WEB-INF/jsp/match-score.jsp";
     private static final String FINAL_MATCH_SCORE_JSP = "/WEB-INF/jsp/final-match-score.jsp";
     private static final String UUID = "uuid";
