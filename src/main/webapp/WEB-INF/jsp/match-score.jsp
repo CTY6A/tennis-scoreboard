@@ -46,11 +46,11 @@
                 </thead>
                 <tbody>
                 <tr class="player1">
-                    <td class="table-text">${player1Name}</td>
-                    <td class="table-text">${player1Sets}</td>
-                    <td class="table-text">${player1Games}</td>
-                    <td class="table-text">${player1Points}</td>
-                    <td class="table-text" onclick="sendPost('${player1Id}')">
+                    <td class="table-text">${matchScore.player1().name()}</td>
+                    <td class="table-text">${matchScore.player1().sets()}</td>
+                    <td class="table-text">${matchScore.player1().games()}</td>
+                    <td class="table-text">${matchScore.player1().points()}</td>
+                    <td class="table-text" onclick="sendPost('${matchScore.player1().id()}')">
                         <div class="score-btn">Score</div>
                     </td>
                 </tr>
@@ -67,11 +67,11 @@
                 </script>
 
                 <tr class="player2">
-                    <td class="table-text">${player2Name}</td>
-                    <td class="table-text">${player2Sets}</td>
-                    <td class="table-text">${player2Games}</td>
-                    <td class="table-text">${player2Points}</td>
-                    <td class="table-text" onclick="sendPost('${player2Id}')">
+                    <td class="table-text">${matchScore.player2().name()}</td>
+                    <td class="table-text">${matchScore.player2().sets()}</td>
+                    <td class="table-text">${matchScore.player2().games()}</td>
+                    <td class="table-text">${matchScore.player2().points()}</td>
+                    <td class="table-text" onclick="sendPost('${matchScore.player2().id()}')">
                         <div class="score-btn" >Score</div>
                     </td>
                 </tr>

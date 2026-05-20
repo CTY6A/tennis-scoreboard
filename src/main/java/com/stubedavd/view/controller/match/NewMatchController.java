@@ -1,11 +1,9 @@
 package com.stubedavd.view.controller.match;
 
 import com.stubedavd.exception.ValidationException;
-import com.stubedavd.model.match.service.OngoingMatchService;
-import com.stubedavd.mapper.player.PlayerMapper;
-import com.stubedavd.model.player.domain.PlayerDomain;
-import com.stubedavd.model.player.entity.Player;
-import com.stubedavd.model.player.repository.PlayerRepository;
+import com.stubedavd.mapper.match.MatchMapper;
+import com.stubedavd.model.match.dto.request.MatchRequestDto;
+import com.stubedavd.model.match.service.NewMatchService;
 import com.stubedavd.util.Validator;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -25,16 +23,14 @@ public class NewMatchController extends BaseController {
     private static final String MATCH_SCORE_UUID = "/match-score?uuid=";
     private static final String PLAYER_NAME_IS_INVALID = "Player name is invalid";
 
-    private OngoingMatchService ongoingMatchService;
-    private PlayerMapper playerMapper;
-    private PlayerRepository playerRepository;
+    private NewMatchService newMatchService;
+    private MatchMapper matchMapper;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        ongoingMatchService = getOngoingMatchService(config);
-        playerMapper = getPlayerMapper(config);
-        playerRepository = getPlayerRepository(config);
+        newMatchService = getNewMatchService(config);
+        matchMapper = getMatchMapper(config);
     }
 
     @Override
@@ -49,20 +45,11 @@ public class NewMatchController extends BaseController {
         String player1Name = request.getParameter(PLAYER_1_NAME);
         String player2Name = request.getParameter(PLAYER_2_NAME);
         validatePlayers(request, response, player1Name, player2Name);
-
         player1Name = player1Name.trim();
         player2Name = player2Name.trim();
-        String finalPlayer1Name = player1Name;
-        String finalPlayer2Name = player2Name;
-        Player player1 = playerRepository.findByName(player1Name)
-                .orElseGet(() -> playerRepository.save(playerMapper.toEntity(finalPlayer1Name)));
-        Player player2 = playerRepository.findByName(player2Name)
-                .orElseGet(() -> playerRepository.save(playerMapper.toEntity(finalPlayer2Name)));
-        PlayerDomain player1Domain = playerMapper.toDomain(player1);
-        PlayerDomain player2Domain = playerMapper.toDomain(player2);
+        MatchRequestDto matchRequestDto = matchMapper.toRequestDto(player1Name, player2Name);
 
-        UUID matchId = ongoingMatchService.save(player1Domain, player2Domain);
-
+        UUID matchId = newMatchService.create(matchRequestDto);
         response.sendRedirect(request.getContextPath() + MATCH_SCORE_UUID + matchId);
     }
 

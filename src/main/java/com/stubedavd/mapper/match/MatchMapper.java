@@ -1,5 +1,6 @@
 package com.stubedavd.mapper.match;
 
+import com.stubedavd.model.match.dto.request.MatchRequestDto;
 import com.stubedavd.model.match.dto.response.MatchResponseDto;
 import com.stubedavd.model.match.entity.Match;
 import com.stubedavd.model.player.entity.Player;
@@ -21,6 +22,8 @@ public interface MatchMapper {
     MatchResponseDto toResponseDto(Match match);
 
     List<MatchResponseDto> toResponseDtoList(List<Match> matches);
+
+    MatchRequestDto toRequestDto(String player1Name, String player2Name);
 
     @ObjectFactory
     default MatchResponseDto createResponseDto (Match match) {

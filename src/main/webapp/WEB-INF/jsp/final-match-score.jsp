@@ -40,22 +40,22 @@
                 <thead class="result">
                 <tr>
                     <th class="table-text">Player</th>
-                    <c:forEach var="set" items="${player1Score}" varStatus="loop">
+                    <c:forEach var="set" items="${matchScore.player1().score()}" varStatus="loop">
                         <th class="table-text">Set ${loop.index + 1}</th>
                     </c:forEach>
                 </tr>
                 </thead>
                 <tbody>
                 <tr class="player1">
-                    <td class="table-text">${player1Name}</td>
-                    <c:forEach var="set" items="${player1Score}" varStatus="loop">
+                    <td class="table-text">${matchScore.player1().name()}</td>
+                    <c:forEach var="set" items="${matchScore.player1().score()}" varStatus="loop">
                         <td class="table-text">${set}</td>
                     </c:forEach>
                 </tr>
 
                 <tr class="player2">
-                    <td class="table-text">${player2Name}</td>
-                    <c:forEach var="set" items="${player2Score}" varStatus="loop">
+                    <td class="table-text">${matchScore.player2().name()}</td>
+                    <c:forEach var="set" items="${matchScore.player2().score()}" varStatus="loop">
                         <td class="table-text">${set}</td>
                     </c:forEach>
                 </tr>
