@@ -10,40 +10,27 @@ import com.stubedavd.model.match.service.impl.MatchScoreCalculationServiceImpl;
 import org.junit.jupiter.api.*;
 
 public class TennisScoreTest {
-
-    // Для тестирования основной бизнес логики не должно быть необходимости в классах JPA Entity.
-        // После рефакторинга доменных моделей это исправится автоматически.
-
-    // Все тесты проходят успешно несмотря на то, что логика приложения работает некорректно.
-        // Это означает, что покрытие тестами недостаточное.
-
     private MatchScoreCalculationService matchScoreCalculationService;
     private MatchScoreModel matchScoreModel;
     private PlayerDomain player1;
     private PlayerDomain player2;
 
     @BeforeEach
-    void setUpBeforeClass() {
-
+    void setUpBeforeTest() {
         matchScoreCalculationService = new MatchScoreCalculationServiceImpl();
         MatchScoreMapper matchScoreMapper = MatchScoreMapper.INSTANCE;
-
         player1 = new PlayerDomain(0L, "Nadal");
-
-        player2 = new PlayerDomain(0L, "Nadal");
-
+        player2 = new PlayerDomain(1L, "Federer");
         matchScoreModel = matchScoreMapper.toDomain(player1, player2);
     }
 
     @Test
     void testInitialState() {
-
         Assertions.assertFalse(matchScoreCalculationService.isMatchFinished(matchScoreModel));
     }
 
     @Test
     void testGameWithoutDeuce() {
-
         matchScoreCalculationService.pointWon(matchScoreModel, player1);
         matchScoreCalculationService.pointWon(matchScoreModel, player1);
         matchScoreCalculationService.pointWon(matchScoreModel, player1);
@@ -54,14 +41,13 @@ public class TennisScoreTest {
 
     @Test
     void testDeuceAndAdvantage() {
+        matchScoreCalculationService.pointWon(matchScoreModel, player1);
+        matchScoreCalculationService.pointWon(matchScoreModel, player1);
+        matchScoreCalculationService.pointWon(matchScoreModel, player1);
 
-        matchScoreCalculationService.pointWon(matchScoreModel, player1);
         matchScoreCalculationService.pointWon(matchScoreModel, player2);
-        matchScoreCalculationService.pointWon(matchScoreModel, player1);
         matchScoreCalculationService.pointWon(matchScoreModel, player2);
-        matchScoreCalculationService.pointWon(matchScoreModel, player1);
         matchScoreCalculationService.pointWon(matchScoreModel, player2);
-
 
         Assertions.assertEquals(RegularGameScoreValue.FORTY, matchScoreModel.getRegularGameScore().getScore(player1));
         Assertions.assertEquals(RegularGameScoreValue.FORTY, matchScoreModel.getRegularGameScore().getScore(player2));
@@ -82,7 +68,6 @@ public class TennisScoreTest {
 
     @Test
     void testSetWonWithoutTiebreak() {
-
         addGames(player1, 6);
         addGames(player2, 4);
 
@@ -91,7 +76,6 @@ public class TennisScoreTest {
     }
 
     private void addGames(PlayerDomain player, int gamesCount) {
-
         for (int i = 0; i < gamesCount; i++) {
             for (int j = 0; j < 4; j++) {
                 matchScoreCalculationService.pointWon(matchScoreModel, player);
@@ -101,7 +85,6 @@ public class TennisScoreTest {
 
     @Test
     void testTiebreak() {
-
         addGames(player1, 5);
         addGames(player2, 6);
         addGames(player1, 1);
@@ -124,7 +107,6 @@ public class TennisScoreTest {
 
     @Test
     void testMatchWon() {
-
         addGames(player1, 6);
         addGames(player2, 0);
 
@@ -145,7 +127,6 @@ public class TennisScoreTest {
 
     @Test
     void testSetWon7_5() {
-
         addGames(player1, 5);
         addGames(player2, 5);
         addGames(player1, 2);
@@ -155,7 +136,6 @@ public class TennisScoreTest {
 
     @Test
     void testPointWon40_40() {
-
         matchScoreCalculationService.pointWon(matchScoreModel, player1);
         matchScoreCalculationService.pointWon(matchScoreModel, player1);
         matchScoreCalculationService.pointWon(matchScoreModel, player1);
@@ -171,7 +151,6 @@ public class TennisScoreTest {
 
     @Test
     void testPointWon40_0() {
-
         matchScoreCalculationService.pointWon(matchScoreModel, player1);
         matchScoreCalculationService.pointWon(matchScoreModel, player1);
         matchScoreCalculationService.pointWon(matchScoreModel, player1);
