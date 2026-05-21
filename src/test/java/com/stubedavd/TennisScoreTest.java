@@ -1,6 +1,6 @@
 package com.stubedavd;
 
-import com.stubedavd.mapper.match.MatchScoreModelMapper;
+import com.stubedavd.mapper.match.MatchScoreMapper;
 import com.stubedavd.model.match.domain.score.value.RegularGameScoreValue;
 import com.stubedavd.model.match.service.MatchScoreCalculationService;
 import com.stubedavd.model.player.domain.PlayerDomain;
@@ -26,13 +26,13 @@ public class TennisScoreTest {
     void setUpBeforeClass() {
 
         matchScoreCalculationService = new MatchScoreCalculationServiceImpl();
-        MatchScoreModelMapper matchScoreModelMapper = MatchScoreModelMapper.INSTANCE;
+        MatchScoreMapper matchScoreMapper = MatchScoreMapper.INSTANCE;
 
         player1 = new PlayerDomain(0L, "Nadal");
 
         player2 = new PlayerDomain(0L, "Nadal");
 
-        matchScoreModel = matchScoreModelMapper.toDomain(player1, player2);
+        matchScoreModel = matchScoreMapper.toDomain(player1, player2);
     }
 
     @Test

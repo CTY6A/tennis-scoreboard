@@ -1,7 +1,7 @@
 package com.stubedavd.view.listener;
 
 import com.stubedavd.mapper.match.MatchMapper;
-import com.stubedavd.mapper.match.MatchScoreModelMapper;
+import com.stubedavd.mapper.match.MatchScoreMapper;
 import com.stubedavd.model.match.repository.MatchRepository;
 import com.stubedavd.model.match.service.*;
 import com.stubedavd.model.match.service.impl.*;
@@ -26,12 +26,12 @@ public class ContextListener implements ServletContextListener {
 
         PlayerMapper playerMapper = PlayerMapper.INSTANCE;
         MatchMapper matchMapper = MatchMapper.INSTANCE;
-        MatchScoreModelMapper matchScoreModelMapper = MatchScoreModelMapper.INSTANCE;
+        MatchScoreMapper matchScoreMapper = MatchScoreMapper.INSTANCE;
 
         PlayerRepository playerRepository = new PlayerRepositoryImpl(HibernateUtil.getSessionFactory());
         MatchRepository matchRepository = new MatchRepositoryImpl();
 
-        OngoingMatchService ongoingMatchService = new OngoingMatchServiceImpl(matchScoreModelMapper);
+        OngoingMatchService ongoingMatchService = new OngoingMatchServiceImpl(matchScoreMapper);
         NewMatchService newMatchService = new NewMatchServiceImpl(
                 ongoingMatchService,
                 playerMapper,
@@ -43,7 +43,7 @@ public class ContextListener implements ServletContextListener {
                 matchScoreCalculationService,
                 playerMapper,
                 matchMapper,
-                matchScoreModelMapper,
+                matchScoreMapper,
                 matchRepository
         );
         MatchesService matchesService = new MatchesServiceImpl(matchMapper, matchRepository);

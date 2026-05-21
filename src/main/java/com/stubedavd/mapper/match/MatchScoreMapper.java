@@ -13,9 +13,9 @@ import org.mapstruct.ObjectFactory;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
-public interface MatchScoreModelMapper {
+public interface MatchScoreMapper {
 
-    MatchScoreModelMapper INSTANCE = Mappers.getMapper(MatchScoreModelMapper.class);
+    MatchScoreMapper INSTANCE = Mappers.getMapper(MatchScoreMapper.class);
 
     @Mapping(target = "winner", ignore = true)
     @Mapping(target = "regularGameScore", ignore = true)

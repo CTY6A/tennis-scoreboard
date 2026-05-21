@@ -2,7 +2,7 @@ package com.stubedavd.model.match.service.impl;
 
 import com.stubedavd.exception.NotFoundException;
 import com.stubedavd.mapper.match.MatchMapper;
-import com.stubedavd.mapper.match.MatchScoreModelMapper;
+import com.stubedavd.mapper.match.MatchScoreMapper;
 import com.stubedavd.mapper.player.PlayerMapper;
 import com.stubedavd.model.match.domain.MatchScoreModel;
 import com.stubedavd.model.match.dto.response.FinalScoreResponseDto;
@@ -26,13 +26,13 @@ public class MatchScoreServiceImpl implements MatchScoreService {
     private final MatchScoreCalculationService matchScoreCalculationService;
     private final PlayerMapper playerMapper;
     private final MatchMapper matchMapper;
-    private final MatchScoreModelMapper matchScoreModelMapper;
+    private final MatchScoreMapper matchScoreMapper;
     private final MatchRepository matchRepository;
 
     @Override
     public MatchScoreResponseDto getScore(UUID uuid) {
         MatchScoreModel matchScoreModel = ongoingMatchService.get(uuid);
-        return matchScoreModelMapper.toResponseDto(matchScoreModel);
+        return matchScoreMapper.toResponseDto(matchScoreModel);
     }
 
     @Override
@@ -75,6 +75,6 @@ public class MatchScoreServiceImpl implements MatchScoreService {
         matchRepository.save(match);
         ongoingMatchService.delete(uuid);
 
-        return matchScoreModelMapper.toFinalResponseDto(matchScoreModel);
+        return matchScoreMapper.toFinalResponseDto(matchScoreModel);
     }
 }

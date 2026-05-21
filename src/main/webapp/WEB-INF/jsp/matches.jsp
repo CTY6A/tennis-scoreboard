@@ -33,7 +33,13 @@
     <div class="container">
         <h1>Matches</h1>
         <div class="input-container">
-            <input class="input-filter" placeholder="Filter by name" type="text" name="playerNameFilter" id="playerNameFilter" value="${playerName}"/>
+            <input
+                    class="input-filter"
+                    placeholder="Filter by name"
+                    type="text" name="playerNameFilter"
+                    id="playerNameFilter"
+                    value="${matches.playerName()}"
+            />
             <div>
                 <a onclick="resetFilterAndSendGet(1)">
                     <button class="btn-filter">Reset Filter</button>
@@ -54,7 +60,8 @@
         <script>
             function sendGet(page) {
                 document.getElementById('page').value = page;
-                document.getElementById('filter_by_player_name').value = document.getElementById('playerNameFilter').value;
+                document.getElementById('filter_by_player_name').value =
+                    document.getElementById('playerNameFilter').value;
                 document.getElementById('getForm').submit();
             }
             function resetFilterAndSendGet(page) {
@@ -70,7 +77,7 @@
                 <th>Player Two</th>
                 <th>Winner</th>
             </tr>
-            <c:forEach var="match" items="${requestScope.matches}">
+            <c:forEach var="match" items="${requestScope.matches.matches()}">
                 <tr>
                     <td>${match.player1Name()}</td>
                     <td>${match.player2Name()}</td>
@@ -80,16 +87,20 @@
         </table>
 
         <div class="pagination">
-            <a class="prev" onclick="sendGet(${pageNumber} - 1)"> < </a>
-            <c:forEach begin="${(pageNumber > 2) ? pageNumber - 2 : 1}" end="${pageNumber + 2}" varStatus="loop">
-                <c:if test="${(loop.index > 0) && (loop.index <= pageCount)}">
+            <a class="prev" onclick="sendGet(${matches.pageNumber()} - 1)"> < </a>
+            <c:forEach
+                    begin="${(matches.pageNumber() > 2) ? matches.pageNumber() - 2 : 1}"
+                    end="${matches.pageNumber() + 2}"
+                    varStatus="loop"
+            >
+                <c:if test="${(loop.index > 0) && (loop.index <= matches.pageCount())}">
                     <a class="num-page
-                    <c:if test="${loop.index == pageNumber}"> current</c:if>"
+                    <c:if test="${loop.index == matches.pageNumber()}"> current</c:if>"
                         onclick="sendGet(${loop.index})">${loop.index}</a>
                 </c:if>
             </c:forEach>
-            <a class="next" onclick="sendGet(${pageNumber} + 1)"> > </a>
-            <p> ${matchesFrom}-${matchesTo} of ${matchesCount}</p>
+            <a class="next" onclick="sendGet(${matches.pageNumber()} + 1)"> > </a>
+            <p> ${matches.matchesFrom()}-${matches.matchesTo()} of ${matches.matchesCount()}</p>
         </div>
     </div>
 </main>

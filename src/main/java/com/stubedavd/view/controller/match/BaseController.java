@@ -2,16 +2,12 @@ package com.stubedavd.view.controller.match;
 
 import com.stubedavd.exception.NotFoundException;
 import com.stubedavd.mapper.match.MatchMapper;
-import com.stubedavd.mapper.player.PlayerMapper;
 import com.stubedavd.model.match.service.*;
-import com.stubedavd.model.match.service.impl.NewMatchServiceImpl;
-import com.stubedavd.model.player.repository.PlayerRepository;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.http.HttpServlet;
 
 public class BaseController extends HttpServlet {
     private static final String PLAYER_MAPPER_NOT_FOUND = "Player mapper not found";
-    private static final String PLAYER_REPOSITORY_NOT_FOUND = "Player repository not found";
     private static final String MATCHES_SERVICE_NOT_FOUND = "Matches service not found";
     public static final String MATCH_SCORE_SERVICE_NOT_FOUND = "Match score service not found";
     public static final String NEW_MATCH_SERVICE_NOT_FOUND = "New match service not found";
