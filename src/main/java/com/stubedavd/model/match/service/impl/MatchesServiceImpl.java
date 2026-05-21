@@ -24,7 +24,7 @@ public class MatchesServiceImpl implements MatchesService {
         if (playerName.isBlank()) {
             matchesCount = matchRepository.count();
         } else {
-            matchesCount = matchRepository.countByPlayerName(playerName);;
+            matchesCount = matchRepository.countByPlayerName(playerName);
         }
         pageCount = (matchesCount + PAGE_SIZE - 1) / PAGE_SIZE;
         if (pageNumber > pageCount - 1 && pageCount != 0) {
