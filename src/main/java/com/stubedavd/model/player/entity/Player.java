@@ -11,12 +11,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Player {
-
     public static final int NAME_MAX_LENGTH = 23;
-
-    public Player(String name) {
-        this.name = name;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,4 +19,8 @@ public class Player {
 
     @Column(unique = true, length = NAME_MAX_LENGTH)
     private String name;
+
+    public Player(String name) {
+        this.name = name;
+    }
 }
